@@ -65,7 +65,7 @@ public class AddEventActivity extends ComponentActivity {
             }
         });
     }
-
+//TODO add events to database by userid
     private void showDateTimePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
