@@ -100,7 +100,7 @@ public class AddEventActivity extends ComponentActivity {
                 }, year, month, day);
         datePickerDialog.show();
     }
-
+//TODO fix cal data output for weather
     private void addEventToCalendar(String title, String location, long startTimeMillis) {
 
         Event event = new Event(title, location, startTimeMillis);

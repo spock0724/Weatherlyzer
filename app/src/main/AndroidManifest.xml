@@ -42,6 +42,11 @@
             android:exported="false"
             android:label="home_activity"
             android:theme="@style/Theme.WeatherlyzerApplication" />
+        <activity
+            android:name=".CreateAccountActivity"
+            android:exported="false"
+            android:label="create_account_activity"
+            android:theme="@style/Theme.WeatherlyzerApplication" />
 
 
     </application>

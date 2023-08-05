@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.content.SharedPreferences;
+import android.content.Context;
+
+
 
 import androidx.activity.ComponentActivity;
 
@@ -21,6 +25,7 @@ public class ProfileActivity extends ComponentActivity {
     private Button logoutbutton;
     private TextView nameTextView;
     private TextView emailTextView;
+    private UserDatabaseHelper userDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +35,12 @@ public class ProfileActivity extends ComponentActivity {
         nameTextView = findViewById(R.id.nameTextView);
         emailTextView = findViewById(R.id.emailTextView);
 
-        // Get the user ID passed from the login screen
-        int userId = getIntent().getIntExtra("userId", -1);
+        userDbHelper = new UserDatabaseHelper(this);
+
+        // Retrieve the logged-in user's ID from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        long userId = sharedPreferences.getLong("userId", -1);
+
 
         // Call the method to read user info and display based on the user ID
         readUserInfoAndDisplay(userId);
@@ -58,38 +67,17 @@ public class ProfileActivity extends ComponentActivity {
         });
     }
 
-    private void readUserInfoAndDisplay(int userId) {
-        try {
-            InputStream inputStream = getAssets().open("login.txt");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            Map<Integer, String> userDataMap = new HashMap<>();
+    private void readUserInfoAndDisplay(long userId) {
+        // Use the UserDatabaseHelper to get the User object based on the user ID
+        User user = userDbHelper.getUserById(userId);
 
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] userData = line.split(",");
-                int id = Integer.parseInt(userData[0]);
-                String username = userData[1];
-                String password = userData[2];
-                String fullName = userData[3];
-                String email = userData[4];
-
-                // Add the user data to the map with the user ID as the key
-                userDataMap.put(id, fullName + "," + email);
-            }
-
-            bufferedReader.close();
-            inputStream.close();
-
-            if (userDataMap.containsKey(userId)) {
-                String userData = userDataMap.get(userId);
-                String[] userDataArray = userData.split(",");
-
-                // Display the user's name and email in the TextViews
-                nameTextView.setText(userDataArray[0]);
-                emailTextView.setText(userDataArray[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (user != null) {
+            // Display the user's name and email in the TextViews
+            nameTextView.setText(user.getName());
+            emailTextView.setText(user.getEmail());
+        } else {
+            nameTextView.setText("Error");
+            emailTextView.setText("Error");
         }
     }
 }
