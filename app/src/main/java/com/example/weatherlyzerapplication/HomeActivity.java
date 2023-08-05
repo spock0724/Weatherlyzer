@@ -208,6 +208,8 @@ public class HomeActivity extends ComponentActivity {
                                 locationNameTextView.setText("Current Location: " + cityName);
 // Delete Below
                                 weatherIconImageView.setImageDrawable(weatherIcon);
+
+                                displayAttireRecommendation(temperatureFahrenheit, rainInches, weatherConditionCode);
                             }
                         });
                     } else {
@@ -263,6 +265,120 @@ public class HomeActivity extends ComponentActivity {
         eventAdapter.notifyDataSetChanged();
     }
     //Addevent stuff above
+
+    private String getAttireMessage(int weatherConditionCode, double temperatureFahrenheit, double rainInches) {
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+        int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+        switch (weatherConditionCode) {
+            case 1000:
+                //sunny/clear (the only one that diffenent based on time
+                if(hourOfDay >= 0 && hourOfDay < 18){
+                    return "sunny. Dress lightly.";
+                } else {
+                    return "a clear night. Enjoy the stars!";
+                }
+            case 1003:
+                if(temperatureFahrenheit<73) {
+                    return "partly cloudy. You may need a light jacket.";
+                } else {
+                    return "partly cloudy.";
+                }
+            case 1006:
+            case 1009:
+                // Weather is cloudy or overcast
+                return "cloudy outside. Don't forget an umbrella!";
+            case 1063:
+            case 1066:
+            case 1069:
+            case 1072:
+            case 1180:
+            case 1183:
+            case 1186:
+            case 1189:
+            case 1192:
+            case 1195:
+                // Rainy weather conditions
+                if (rainInches > 0.1) {
+                    return "rain is expected. Don't forget your raincoat or umbrella!";
+                } else {
+                    return "light rain is possible. You may want to bring an umbrella.";
+                }
+            case 1114:
+            case 1117:
+            case 1135:
+            case 1147:
+                // Foggy or freezing fog conditions
+                return "foggy. Drive carefully and wear warm clothing.";
+            case 1210:
+            case 1213:
+            case 1216:
+            case 1219:
+            case 1222:
+            case 1225:
+                // Snowy conditions
+                if (temperatureFahrenheit < 32) {
+                    return "snowing and freezing outside. Dress warmly!";
+                } else {
+                    return "snow is expected. Don't forget your winter boots and warm clothing.";
+                }
+            case 1198:
+            case 1201:
+            case 1204:
+            case 1207:
+            case 1237:
+            case 1240:
+            case 1243:
+            case 1246:
+            case 1249:
+            case 1252:
+            case 1255:
+            case 1258:
+            case 1261:
+            case 1264:
+            case 1273:
+            case 1276:
+            case 1279:
+            case 1282:
+                // TODO ADD Other weather conditions(codes in assests folder from api site)
+                return "Check the weather forecast for specific attire recommendations.";
+            default:
+                return "";
+        }
+    }
+
+
+    private void displayAttireRecommendation(double temperatureFahrenheit, double rainInches, int weatherConditionCode ) {
+        String tempMsg;
+        String rainMsg;
+        String codeMsg;
+
+        if (temperatureFahrenheit > 100) {
+            tempMsg = "Extreme heat! It's";
+        } else if (temperatureFahrenheit >= 70) {
+            tempMsg = "It's warm and";
+        } else if (temperatureFahrenheit >= 50) {
+            tempMsg = "It's a bit cool and";
+        } else if (temperatureFahrenheit >= 33) {
+            tempMsg = "It's cold and";
+        } else if (temperatureFahrenheit >= 0) {
+            tempMsg = "Extreme Freezing! It's";
+        } else {
+            tempMsg = "";
+        }
+
+        if(rainInches>0.1){
+            rainMsg = " Rain expected. ";
+        } else {
+            rainMsg = " ";
+        }
+
+        codeMsg = getAttireMessage(weatherConditionCode, temperatureFahrenheit, rainInches);
+
+
+        TextView attireRecommendationTextView = findViewById(R.id.attireRecommendation);
+        attireRecommendationTextView.setText(tempMsg + rainMsg + codeMsg);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -291,4 +407,3 @@ public class HomeActivity extends ComponentActivity {
         }
     }
 }
-
