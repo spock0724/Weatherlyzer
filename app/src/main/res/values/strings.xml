@@ -8,4 +8,6 @@
     <string name="name">Name:</string>
     <string name="jandroidname">Joe Android</string>
     <string name="homeTitle">Welcome!</string>
+    <string name="RecomendationMsg" />
+    <string name="GreetingMsg" />
 </resources>

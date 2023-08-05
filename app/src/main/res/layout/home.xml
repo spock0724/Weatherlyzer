@@ -34,7 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="356dp"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rainPercentage"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,18 +45,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="354dp"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rainPercentage"
         app:layout_constraintTop_toBottomOf="@+id/tempIcon" />
 
     <TextView
+        android:id="@+id/currentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="250dp"
+        android:layout_marginEnd="115dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/tempIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/greetingMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
-        android:text="TextView"
+        android:text="@string/GreetingMsg"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,19 +84,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/greetingMessage" />
-
-    <TextView
-        android:id="@+id/currentLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="250dp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginBottom="12dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/tempIcon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/windIcon"
@@ -131,7 +128,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="-3dp"
         android:layout_marginBottom="254dp"
-        android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/addeventButton"
         app:layout_constraintEnd_toStartOf="@+id/temp"
         app:layout_constraintStart_toEndOf="@+id/windSpeed"
@@ -139,12 +135,26 @@
 
     <ListView
         android:id="@+id/eventListView"
-        android:layout_width="384dp"
-        android:layout_height="162dp"
-        android:layout_marginBottom="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/addeventButton"
+        android:layout_width="381dp"
+        android:layout_height="79dp"
+        android:layout_marginBottom="140dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rainPercentage" />
+        app:layout_constraintTop_toBottomOf="@+id/attireRecommendation" />
+
+    <TextView
+        android:id="@+id/attireRecommendation"
+        android:layout_width="346dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="401dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/RecomendationMsg"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/eventListView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
