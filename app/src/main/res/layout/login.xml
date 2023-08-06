@@ -12,24 +12,20 @@
         android:id="@+id/loginbutton"
         android:layout_width="75dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="170dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/loginbutton"
         android:textColor="@color/purple_500"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/inputPassword" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="297dp"
-        android:layout_height="0dp"
+        android:layout_width="394dp"
+        android:layout_height="242dp"
         android:layout_marginTop="44dp"
-        android:layout_marginBottom="286dp"
         android:src="@drawable/mainicon"
-        app:layout_constraintBottom_toTopOf="@+id/loginbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +35,7 @@
         android:id="@+id/inputUsername"
         android:layout_width="297dp"
         android:layout_height="49dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="text"
@@ -53,28 +49,34 @@
         android:id="@+id/inputPassword"
         android:layout_width="296dp"
         android:layout_height="43dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="text"
-        android:textColorHint="#CDCDCD"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/loginbutton"
+        android:textColorHint="#CDCDCD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputUsername" />
 
     <Button
         android:id="@+id/newaccountbutton"
-        android:layout_width="193dp"
-        android:layout_height="36dp"
-        android:backgroundTint="#00FFFFFF"
-        android:foregroundTint="#00FFFFFF"
-        android:shadowColor="#00FFFFFF"
-        android:text="Create New Account"
-        android:textColor="@android:color/holo_blue_dark"
+        android:layout_width="215dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/createaccount"
+        app:layout_constraintBottom_toTopOf="@+id/forgotPasswordButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/forgotPasswordButton"
+        android:layout_width="215dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="45dp"
+        android:background="@drawable/forgotpassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

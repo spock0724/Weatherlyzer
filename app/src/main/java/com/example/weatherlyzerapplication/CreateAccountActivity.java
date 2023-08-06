@@ -43,6 +43,7 @@ public class CreateAccountActivity extends ComponentActivity {
         createAccountButton = findViewById(R.id.createButton);
         cancelButton = findViewById(R.id.cancelButton);
 
+
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

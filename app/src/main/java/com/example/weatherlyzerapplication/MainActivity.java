@@ -28,6 +28,9 @@ public class MainActivity extends ComponentActivity {
     private Button loginButton;
     private Button createAccountButton;
 
+    private Button forgotPasswordButton;
+
+
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -41,6 +44,7 @@ public class MainActivity extends ComponentActivity {
         inputPassword = findViewById(R.id.inputPassword);
         loginButton = findViewById(R.id.loginbutton);
         createAccountButton = findViewById(R.id.newaccountbutton);
+        forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +57,13 @@ public class MainActivity extends ComponentActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CreateAccountActivity.class);
+                startActivity(intent);
+            }
+        });
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });
