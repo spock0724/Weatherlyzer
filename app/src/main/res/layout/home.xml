@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/currentLocationCity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundskygrad">
 
     <Button
         android:id="@+id/profileButton"
@@ -68,6 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
         android:text="@string/GreetingMsg"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +117,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="35dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:src="@drawable/therm_icon"
         app:layout_constraintBottom_toTopOf="@+id/temp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -135,25 +137,27 @@
 
     <ListView
         android:id="@+id/eventListView"
-        android:layout_width="381dp"
-        android:layout_height="79dp"
-        android:layout_marginBottom="140dp"
+        android:layout_width="376dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/attireRecommendation" />
 
     <TextView
         android:id="@+id/attireRecommendation"
-        android:layout_width="346dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="401dp"
+        android:layout_width="388dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="388dp"
         android:layout_marginBottom="15dp"
         android:text="@string/RecomendationMsg"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/eventListView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
