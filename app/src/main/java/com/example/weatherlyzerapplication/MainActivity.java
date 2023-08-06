@@ -59,8 +59,13 @@ public class MainActivity extends ComponentActivity {
     }
 
     private void loginUser() {
-        String username = inputUsername.getText().toString();
-        String password = inputPassword.getText().toString();
+        String username = inputUsername.getText().toString().trim();
+        String password = inputPassword.getText().toString().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Please enter both username and password.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         firebaseAuth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -72,7 +77,7 @@ public class MainActivity extends ComponentActivity {
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
                             finish(); // Finish the MainActivity so that the user can't navigate back to it
-                                      // (UNLESS IN PROFILE PAGE with logout button!!)
+                            // (UNLESS IN PROFILE PAGE with logout button!!)
                         } else {
                             // If sign-in fails, display a message to the user.
                             Toast.makeText(MainActivity.this, "Authentication failed. Please check your credentials.", Toast.LENGTH_SHORT).show();
