@@ -9,12 +9,12 @@
 
     <Button
         android:id="@+id/profileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="47dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="183dp"
-        android:text="Profile"
+        android:background="@drawable/settingsicon"
         app:layout_constraintBottom_toTopOf="@+id/tempIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -34,19 +34,17 @@ public class EventListAdapter extends ArrayAdapter<Event> {
         TextView dateTextView = itemView.findViewById(R.id.eventDateTextView);
 
         titleTextView.setText(currentEvent.getTitle());
-        locationTextView.setText(currentEvent.getLocation());
+        locationTextView.setText(currentEvent.getLocationName()); // Use getLocationName() here
+
         dateTextView.setText(currentEvent.getStartTimeAsString());
 
         String formattedStartTime = currentEvent.getStartTimeAsString();
 
-
         dateTextView.setText(formattedStartTime);
 
-        int paddingInDp = 8; // You can adjust this value to increase or decrease the space between events(NOT the words!! !)
+        int paddingInDp = 8; // adjust this value tochange the space between events (NOT the words!!)
         int paddingInPx = (int) (paddingInDp * context.getResources().getDisplayMetrics().density);
         itemView.setPadding(0, 0, 0, paddingInPx);
-
-
 
         return itemView;
     }

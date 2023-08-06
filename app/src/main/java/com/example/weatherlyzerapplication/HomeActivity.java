@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
+import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -89,8 +90,6 @@ public class HomeActivity extends ComponentActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event selectedEvent = eventList.get(position);
                 // TODO Handle the click event for the selected event if needed
-                // For example, open a detailed view of the event and EDIT also needs to be done,
-                // new view needs to be made for that one
             }
         });
 
@@ -233,7 +232,7 @@ public class HomeActivity extends ComponentActivity {
         String apiKey = "aa77259b5b6b4c988ee212953230408";
         String apiUrl = "http://api.weatherapi.com/v1/current.json?key=" + apiKey +
                 "&q=" + latitude + "," + longitude +
-                "&units=imperial"; // Specify imperial units in the API request
+                "&units=imperial"; // Specify imperial(US)units in the API request
 
         new Thread(new Runnable() {
             @Override
@@ -313,6 +312,7 @@ public class HomeActivity extends ComponentActivity {
             }
         }).start();
     }
+    //TODO make more comprehensive
     private Drawable getWeatherIcon(int weatherConditionCode) {
         switch (weatherConditionCode) {
             case 1000:
@@ -461,10 +461,11 @@ public class HomeActivity extends ComponentActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             long eventId = data.getLongExtra("event_id", -1);
             String title = data.getStringExtra("event_title");
-            String location = data.getStringExtra("event_location");
+            String placeId = data.getStringExtra("event_place_id");
             long startTimeMillis = data.getLongExtra("event_start_time", 0);
 
-            Event event = new Event(title, location, startTimeMillis);
+            Event event = new Event(title, placeId, startTimeMillis, this);
+
             addEventToList(event);
         }
     }

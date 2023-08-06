@@ -1,4 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google() // This is the correct place for adding the 'Google' repository
+        // Other repositories, if any
+    }
+    // Other configurations for the buildscript block
+}
+
 plugins {
     id 'com.android.application' version '8.0.2' apply false
     id 'com.android.library' version '8.0.2' apply false
@@ -7,5 +15,7 @@ plugins {
     // Add the dependency for the Google services Gradle plugin
 
     id 'com.google.gms.google-services' version '4.3.15' apply false
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
 
 }
+

@@ -37,7 +37,7 @@
             android:name=".AddEventActivity"
             android:exported="false"
             android:label="add_event_activity"
-            android:theme="@style/Theme.WeatherlyzerApplication" />
+            android:theme="@style/Theme.AppCompat"/>
         <activity
             android:name=".HomeActivity"
             android:exported="false"
@@ -49,6 +49,9 @@
             android:label="create_account_activity"
             android:theme="@style/Theme.WeatherlyzerApplication" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCfQ6LNv7Nv0b4gXiQJu5ufE22_nT6Pvvk" />
 
     </application>
 
