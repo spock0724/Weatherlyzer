@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">WeatherlyzerApplication</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="login">GO\n</string>
+    <string name="jandroidemail">joe.android@email.com</string>
+    <string name="email">Email:</string>
+    <string name="name">Name:</string>
+    <string name="jandroidname">Joe Android</string>
+    <string name="homeTitle">Welcome!</string>
+    <string name="RecomendationMsg" />
+    <string name="GreetingMsg" />
+</resources>

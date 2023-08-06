@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "680098276087",
+    "project_id": "weatherlyzer-5a498",
+    "storage_bucket": "weatherlyzer-5a498.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680098276087:android:435fbcd56b839827a629f2",
+        "android_client_info": {
+          "package_name": "com.example.weatherlyzerapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680098276087-dcnkku8s7u7qlm6bd8goq6kfgba02jq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEEp2p7xvA5w-OGC3UKt0e-jNwqIi04e4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680098276087-dcnkku8s7u7qlm6bd8goq6kfgba02jq4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
