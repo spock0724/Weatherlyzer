@@ -13,30 +13,26 @@
         android:layout_height="48dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="183dp"
         android:background="@drawable/settingsicon"
-        app:layout_constraintBottom_toTopOf="@+id/tempIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/addeventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
-        android:text="ADD Event"
+        android:layout_width="70dp"
+        android:layout_height="72dp"
+        android:background="@drawable/addcalicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rainPercentage" />
+        app:layout_constraintTop_toBottomOf="@+id/eventListView" />
 
     <TextView
         android:id="@+id/windSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="356dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rainPercentage"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/windIcon" />
 
@@ -44,30 +40,26 @@
         android:id="@+id/temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="354dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rainPercentage"
         app:layout_constraintTop_toBottomOf="@+id/tempIcon" />
 
     <TextView
         android:id="@+id/currentLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="250dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/tempIcon"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/rainIcon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weatherIcon" />
 
     <TextView
         android:id="@+id/greetingMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="78dp"
         android:text="@string/GreetingMsg"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textSize="24sp"
@@ -77,72 +69,60 @@
 
     <ImageView
         android:id="@+id/weatherIcon"
-        android:layout_width="110dp"
-        android:layout_height="85dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/weather_default_icon"
-        app:layout_constraintBottom_toTopOf="@+id/currentLocation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/greetingMessage" />
 
     <ImageView
         android:id="@+id/windIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="264dp"
-        android:layout_marginEnd="54dp"
-        android:layout_marginBottom="25dp"
-        android:src="@drawable/wind_icomn"
-        app:layout_constraintBottom_toTopOf="@+id/windSpeed"
-        app:layout_constraintEnd_toStartOf="@+id/rainIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="280dp"
+        android:src="@drawable/wind_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/rainIcon"
-        android:layout_width="64dp"
-        android:layout_height="82dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="54dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="280dp"
         android:src="@drawable/watericon"
         app:layout_constraintEnd_toStartOf="@+id/tempIcon"
+        app:layout_constraintHorizontal_bias="0.127"
         app:layout_constraintStart_toEndOf="@+id/windIcon"
-        app:layout_constraintTop_toBottomOf="@+id/currentLocation" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/tempIcon"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="5dp"
-        android:src="@drawable/therm_icon"
-        app:layout_constraintBottom_toTopOf="@+id/temp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="280dp"
+        android:layout_marginEnd="50dp"
+        android:src="@drawable/thermometericon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rainIcon"
-        app:layout_constraintTop_toBottomOf="@+id/profileButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/rainPercentage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="-3dp"
-        android:layout_marginBottom="254dp"
-        app:layout_constraintBottom_toTopOf="@+id/addeventButton"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toStartOf="@+id/temp"
         app:layout_constraintStart_toEndOf="@+id/windSpeed"
         app:layout_constraintTop_toBottomOf="@+id/rainIcon" />
 
     <ListView
         android:id="@+id/eventListView"
-        android:layout_width="376dp"
-        android:layout_height="110dp"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="377dp"
+        android:layout_height="195dp"
+        android:backgroundTint="#602C9CAB"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/attireRecommendation" />
 
@@ -150,15 +130,11 @@
         android:id="@+id/attireRecommendation"
         android:layout_width="388dp"
         android:layout_height="53dp"
-        android:layout_marginTop="388dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/RecomendationMsg"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/eventListView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/rainPercentage"
+        tools:layout_editor_absoluteX="11dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,34 +9,35 @@
 
     <Button
         android:id="@+id/exitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="54dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:text="cancel"
+        android:background="@drawable/cancelicon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
     <Button
         android:id="@+id/completeEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:text="Add Event"
+        android:layout_width="70dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/addcalicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/eventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="160dp"
         android:ems="10"
         android:hint="Event Title"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,33 +56,33 @@
         android:id="@+id/dateStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="Date/Time"
         android:inputType="datetime"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/autocompleteButton" />
 
     <Button
         android:id="@+id/autocompleteButton"
         android:layout_width="47dp"
         android:layout_height="45dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/searchicon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateStart" />
+        app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="137dp"
         android:layout_height="26dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="60dp"
         android:text="Location"
         android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/autocompleteButton"
-        app:layout_constraintTop_toBottomOf="@+id/dateStart" />
+        app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
