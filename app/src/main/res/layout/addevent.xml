@@ -33,11 +33,11 @@
         android:id="@+id/eventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
         android:layout_marginTop="160dp"
         android:ems="10"
         android:hint="Event Title"
         android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,11 +56,12 @@
         android:id="@+id/dateStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
         android:layout_marginTop="50dp"
         android:ems="10"
+        android:focusableInTouchMode="false"
         android:hint="Date/Time"
         android:inputType="datetime"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/autocompleteButton" />
 
@@ -68,20 +69,21 @@
         android:id="@+id/autocompleteButton"
         android:layout_width="47dp"
         android:layout_height="45dp"
-        android:layout_marginStart="120dp"
+        android:layout_marginStart="110dp"
         android:layout_marginTop="50dp"
         android:background="@drawable/searchicon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/locationTextView"
         android:layout_width="137dp"
         android:layout_height="26dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="68dp"
         android:text="Location"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.145"
         app:layout_constraintStart_toEndOf="@+id/autocompleteButton"
         app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 

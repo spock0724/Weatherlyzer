@@ -42,7 +42,7 @@ public class EventListAdapter extends ArrayAdapter<Event> {
 
         dateTextView.setText(formattedStartTime);
 
-        int paddingInDp = 8; // adjust this value tochange the space between events (NOT the words!!)
+        int paddingInDp = 8; // You can adjust this value to increase or decrease the space between events (NOT the words!!)
         int paddingInPx = (int) (paddingInDp * context.getResources().getDisplayMetrics().density);
         itemView.setPadding(0, 0, 0, paddingInPx);
 

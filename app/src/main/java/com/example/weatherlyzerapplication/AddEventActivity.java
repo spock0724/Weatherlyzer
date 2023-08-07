@@ -1,16 +1,17 @@
 package com.example.weatherlyzerapplication;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -21,26 +22,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.Place.Field;
 import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.net.ssl.SSLEngineResult;
-
-public class AddEventActivity extends AppCompatActivity implements PlaceSelectionListener {
+public class AddEventActivity extends AppCompatActivity{
 
     private EditText eventTitleEditText;
+    private TextView locationTextView;
 
     private String title;
     private EditText eventLocationEditText;
@@ -50,6 +52,9 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
     private Button autocompleteButton;
 
     private long selectedDateTimeMillis;
+    private Event event;
+    private Double latitude;
+    private Double longitude;
 
     private Place selectedPlace;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1001;
@@ -66,12 +71,31 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
 
         String apiKey = "AIzaSyCfQ6LNv7Nv0b4gXiQJu5ufE22_nT6Pvvk";
         Places.initialize(getApplicationContext(), apiKey);
+
+
+        // Initialize the event object
+        event = new Event("", "", 0, getApplicationContext());
+
+        //event.setOnPlaceFetchCompleteListener(this);
+
+
+        // Call deleteExpiredEvents every 60000 (maybe thats too often well see)
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                deleteExpiredEvents();
+                handler.postDelayed(this, 60000); // 1 minute = 60000 MAY MAKE LONGER
+            }
+        }, 60000); // 1 minute = 60000
     }
+
 
     private void setupViews() {
         eventTitleEditText = findViewById(R.id.eventTitle);
         //eventLocationEditText = findViewById(R.id.autocomplete_fragment);
         eventDateEditText = findViewById(R.id.dateStart);
+        locationTextView = findViewById(R.id.locationTextView);
     }
 
     private void setupButtons() {
@@ -95,14 +119,17 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
             @Override
             public void onClick(View v) {
                 String title = eventTitleEditText.getText().toString();
-                String placeId = ""; // Initialize placeId variable
+                String placeId = ""; //
+                latitude = selectedPlace.getLatLng().latitude;
+                longitude = selectedPlace.getLatLng().longitude;
+                // Initialize placeId variable
 
                 if (selectedPlace != null) {
                     placeId = selectedPlace.getId(); // Get the placeId from the selected Place object
                 }
 
                 if (!title.isEmpty() && !placeId.isEmpty()) {
-                    saveEventToDatabase(title, placeId, selectedDateTimeMillis); // Pass placeId instead of Place
+                    saveEventToDatabase(title, placeId, latitude, longitude, selectedDateTimeMillis); // Pass placeId instead of Place
                     finish();
                 } else {
                     Toast.makeText(AddEventActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -120,6 +147,36 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
             }
         });
     }
+    private void deleteExpiredEvents() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference()
+                    .child("users").child(userId).child("events");
+
+            // Get the current time in milliseconds
+            long currentTimeMillis = System.currentTimeMillis();
+
+            eventsRef.orderByChild("startTimeMillis").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                        Event event = eventSnapshot.getValue(Event.class);
+                        if (event != null && event.getStartTimeMillis() < currentTimeMillis) {
+                            // Delete the event if its start time is in the past
+                            eventSnapshot.getRef().removeValue();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle database errors if needed
+                }
+            });
+        }
+    }
+
 
     private void showDateTimePicker() {
         Calendar calendar = Calendar.getInstance();
@@ -161,6 +218,14 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
                 if (data != null) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     selectedPlace = place; // Assign the selected place to selectedPlace
+
+                    // Get the latitude and longitude from selectedPlace and set them in the event
+                    if (selectedPlace != null && selectedPlace.getLatLng() != null) {
+                        double latitude = selectedPlace.getLatLng().latitude;
+                        double longitude = selectedPlace.getLatLng().longitude;
+                        event.setLatitude(latitude);
+                        event.setLongitude(longitude);
+                    }
                 }
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // Handle errors that occurred in the autocomplete activity
@@ -172,10 +237,25 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
         }
     }
 
+    /*
     @Override
     public void onPlaceSelected(Place place) {
         // Handle the selected place here.
+        Log.d("PlaceSelected", "Place selected: " + place.getName());
         eventLocationEditText.setText(place.getName());
+        // Update the location TextView with the latitude and longitude
+        LatLng latLng = place.getLatLng();
+        if (latLng != null) {
+            String latitudeLongitude = "Lat: " + latLng.latitude + ", Lng: " + latLng.longitude;
+            locationTextView.setText(latitudeLongitude);
+        }
+    }
+
+     */
+    /*
+    @Override
+    public void onPlaceFetchComplete(String locationName) {
+        locationTextView.setText(locationName);
     }
 
     @Override
@@ -183,6 +263,7 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
         // Handle any errors that occurred during the autocomplete process here.
         Log.e("AutocompleteError", status.getStatusMessage());
     }
+    */
 
     /*
     private void startAutocompleteActivity() {
@@ -196,7 +277,7 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
     */
 
     private void startAutocompleteActivity() {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
@@ -204,7 +285,8 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
-    private void saveEventToDatabase(String title, String placeId, long startTimeMillis) {
+
+    private void saveEventToDatabase(String title, String placeId, Double latitude, Double longitude, long startTimeMillis) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
@@ -222,8 +304,17 @@ public class AddEventActivity extends AppCompatActivity implements PlaceSelectio
             // Update the location field with the city name
             event.setLocationName(cityName);
 
+            // Get the latitude and longitude from selectedPlace and set them in the event
+            if (selectedPlace != null && selectedPlace.getLatLng() != null) {
+                latitude = selectedPlace.getLatLng().latitude;
+                longitude = selectedPlace.getLatLng().longitude;
+                event.setLatitude(latitude);
+                event.setLongitude(longitude);
+            }
+
             eventsRef.child(eventId).setValue(event);
         }
     }
+
 
 }

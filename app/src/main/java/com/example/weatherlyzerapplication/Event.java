@@ -22,8 +22,12 @@ import java.util.Locale;
 
 @IgnoreExtraProperties
 public class Event {
+    private Event event;
     private String title;
     private String placeId;
+    private double latitude;
+    private double longitude;
+
     private long startTimeMillis;
     private Place location; // Add the Place field
 
@@ -53,10 +57,50 @@ public class Event {
     public String getPlaceId() {
         return placeId;
     }
+    private String eventId; // Add the eventId field
+
+    // (Other methods)
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+
+    }
+
+    public interface OnPlaceFetchCompleteListener {
+        void onPlaceFetchComplete(String locationName);
+    }
+    private OnPlaceFetchCompleteListener onPlaceFetchCompleteListener;
+
+    public void setOnPlaceFetchCompleteListener(OnPlaceFetchCompleteListener listener) {
+        this.onPlaceFetchCompleteListener = listener;
+    }
+
+
+
 
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
 
     public long getStartTimeMillis() {
         return startTimeMillis;
@@ -71,6 +115,7 @@ public class Event {
     }
 
     // Method to fetch place details using the placeId
+    // Method to fetch place details using the placeId
     private void createPlaceFromId(String placeId, Context context) {
         // Initialize the Places SDK if not already initialized.
         if (!Places.isInitialized()) {
@@ -78,7 +123,7 @@ public class Event {
         }
 
         // Fetch the place details using the placeId.
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
         FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, fields).build();
         PlacesClient placesClient = Places.createClient(context);
 
@@ -89,6 +134,15 @@ public class Event {
                     FetchPlaceResponse response = task.getResult();
                     if (response != null) {
                         location = response.getPlace(); // Set the location when fetched
+
+                        // Set the latitude and longitude in the Event object
+                        if (location != null && location.getLatLng() != null) {
+                            latitude = location.getLatLng().latitude;
+                            longitude = location.getLatLng().longitude;
+                        }
+                        if (onPlaceFetchCompleteListener != null) {
+                            onPlaceFetchCompleteListener.onPlaceFetchComplete(getLocationName());
+                        }
                     } else {
                         // Handle error if place is null.
                         Log.e("PlaceError", "Place not found");
@@ -101,19 +155,22 @@ public class Event {
         });
     }
 
+
     // Method to get the name of the location
-    public String getLocationName(){
-        if (placeId != null) {
-            return "testtest";//lookup id and give me the name of the location;
+    public String getLocationName() {
+        if (location != null) {
+            return location.getName();
         } else {
             return "Location not available";
         }
     }
 
+
     @Override
     public String toString() {
         return " " + title + " - " + getLocationName();
     }
+
 
     public String getStartTimeAsString() {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ HH:mm", Locale.getDefault());

@@ -1,6 +1,8 @@
 package com.example.weatherlyzerapplication;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -26,6 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,6 +49,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.TimeZone;
 import java.util.ArrayList;
 
@@ -89,7 +95,10 @@ public class HomeActivity extends ComponentActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event selectedEvent = eventList.get(position);
-                // TODO Handle the click event for the selected event if needed
+                String eventId = selectedEvent.getEventId();
+
+                // Show a delete confirmation AlertDialog with eventId as the tag
+                showDeleteConfirmationDialog(eventId);
             }
         });
 
@@ -192,6 +201,73 @@ public class HomeActivity extends ComponentActivity {
 
 
     }
+    private void showDeleteConfirmationDialog(final String eventId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Event");
+        builder.setMessage("Are you sure you want to delete this event?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User confirmed the delete, so delete the event from the database
+                deleteEvent(eventId);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+
+    private void deleteEvent(String eventId) {
+        if (eventId == null || eventId.isEmpty()) {
+            // eventId is null or empty, handle the error
+            Log.e("DeleteEventError", "EventId is null or empty.");
+            return;
+        }
+        DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(String.valueOf(userId)).child("events");
+
+        // Use removeValue() to delete the event with the given eventId
+        eventRef.child(eventId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Find the event in the eventList and remove it
+                int index = -1;
+                for (int i = 0; i < eventList.size(); i++) {
+                    Event event = eventList.get(i);
+                    if (event.getEventId().equals(eventId)) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index != -1) {
+                    eventList.remove(index);
+                    // Notify the adapter that the data has changed, and the ListView will reorder the events
+                    eventListAdapter.notifyDataSetChanged();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle the failure to delete the event from the database if needed
+                Log.e("DeleteEventError", "Error deleting event: " + e.getMessage());
+            }
+        });
+    }
+
+    // Sort the eventList based on their start time in ascending order
+    /*
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return Long.compare(event1.getStartTimeMillis(), event2.getStartTimeMillis());
+            }
+        });
+
+        // Notify the adapter that the data has changed, and the ListView will reorder the events
+        eventListAdapter.notifyDataSetChanged();
+    }
+     */
 
     private void fetchEventsFromDatabase() {
         // Get the current user ID
@@ -212,7 +288,15 @@ public class HomeActivity extends ComponentActivity {
                 eventList.clear(); // Clear the existing list before adding new events
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    // Get the event ID from the Firebase snapshot key
+                    String eventId = eventSnapshot.getKey();
+
+                    // Retrieve the event details from the snapshot value
                     Event event = eventSnapshot.getValue(Event.class);
+
+                    // Set the event ID in the Event object
+                    event.setEventId(eventId);
+
                     if (event != null) {
                         eventList.add(event);
                     }
@@ -227,7 +311,8 @@ public class HomeActivity extends ComponentActivity {
                 // TODO Handle database read error
             }
         });
-    }
+
+}
     private void fetchWeatherData(double latitude, double longitude) {
         String apiKey = "aa77259b5b6b4c988ee212953230408";
         String apiUrl = "http://api.weatherapi.com/v1/current.json?key=" + apiKey +

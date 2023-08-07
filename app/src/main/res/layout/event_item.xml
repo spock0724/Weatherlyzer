@@ -10,13 +10,15 @@
         android:id="@+id/eventTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="4dp"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/eventLocationTextView"
-        app:layout_constraintStart_toStartOf="@+id/eventLocationTextView"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@android:color/black"/> <!-- Add padding here -->
+        android:paddingTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="4dp" /><!-- Add padding here -->
 
 
     <TextView
@@ -36,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/darker_gray"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="50dp"
         android:layout_marginLeft="16dp"
         android:paddingBottom="4dp"
         android:textSize="14sp"
