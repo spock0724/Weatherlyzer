@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
 
 
 import androidx.core.app.ActivityCompat;
@@ -28,9 +27,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.model.Place;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -49,8 +47,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.TimeZone;
 import java.util.ArrayList;
 
@@ -77,7 +73,7 @@ public class HomeActivity extends ComponentActivity {
     private ArrayList<Event> eventList = new ArrayList<>();
     private EventListAdapter eventListAdapter;
 
-    private ArrayAdapter<Event> eventAdapter;
+    //private ArrayAdapter<Event> eventAdapter;
 
 
     @Override
@@ -90,7 +86,8 @@ public class HomeActivity extends ComponentActivity {
         eventListView.setAdapter(eventListAdapter);
 
 
-        // TODO Add a click listener to the ListView items
+        // TODO Add a click listener to the ListView
+        /*
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -101,6 +98,20 @@ public class HomeActivity extends ComponentActivity {
                 showDeleteConfirmationDialog(eventId);
             }
         });
+         */
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event selectedEvent = eventList.get(position);
+                String eventId = selectedEvent.getEventId();
+
+                Intent intent = new Intent(HomeActivity.this, ViewEventActivity.class);
+                intent.putExtra("event_id", eventId);
+                startActivity(intent);
+
+            }
+        });
+
 
 
         //Addeventstuff under
@@ -128,7 +139,6 @@ public class HomeActivity extends ComponentActivity {
             @Override
             public void onLocationChanged(Location location) {
                 if (!weatherDataFetched) {
-                    // Call the method to fetch weather data only if it hasn't been fetched yet
                     fetchWeatherData(location.getLatitude(), location.getLongitude());
                     weatherDataFetched = true; // Set the flag to true after the first fetch
                 }
@@ -176,7 +186,7 @@ public class HomeActivity extends ComponentActivity {
         tempTextView = findViewById(R.id.temp);
         windSpeedTextView = findViewById(R.id.windSpeed);
         rainPercentageTextView = findViewById(R.id.rainPercentage);
-        locationNameTextView = findViewById(R.id.currentLocation);
+        locationNameTextView = findViewById(R.id.eventLocation);
         weatherIconImageView = findViewById(R.id.weatherIcon);
     }
 
@@ -208,7 +218,7 @@ public class HomeActivity extends ComponentActivity {
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // User confirmed the delete, so delete the event from the database
+                // User confirmed the delete, so delete the event from the list and the database
                 deleteEvent(eventId);
             }
         });
@@ -216,43 +226,47 @@ public class HomeActivity extends ComponentActivity {
         builder.show();
     }
 
-
     private void deleteEvent(String eventId) {
-        if (eventId == null || eventId.isEmpty()) {
-            // eventId is null or empty, handle the error
-            Log.e("DeleteEventError", "EventId is null or empty.");
-            return;
+        // Remove the event from the list
+        int eventIndex = findEventIndexById(eventId);
+        if (eventIndex != -1) {
+            eventList.remove(eventIndex);
+            eventListAdapter.notifyDataSetChanged();
         }
-        DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference()
-                .child("users").child(String.valueOf(userId)).child("events");
 
-        // Use removeValue() to delete the event with the given eventId
-        eventRef.child(eventId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // Find the event in the eventList and remove it
-                int index = -1;
-                for (int i = 0; i < eventList.size(); i++) {
-                    Event event = eventList.get(i);
-                    if (event.getEventId().equals(eventId)) {
-                        index = i;
-                        break;
-                    }
-                }
+        // Delete the event from the Firebase database
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return; // Return if the user is not logged in
+        }
 
-                if (index != -1) {
-                    eventList.remove(index);
-                    // Notify the adapter that the data has changed, and the ListView will reorder the events
-                    eventListAdapter.notifyDataSetChanged();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+        String userId = currentUser.getUid();
+
+        // Get a reference to the events node in the Firebase Database for the current user
+        DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId).child("events");
+
+        // Remove the event with the given eventId from the database
+        eventsRef.child(eventId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle the failure to delete the event from the database if needed
-                Log.e("DeleteEventError", "Error deleting event: " + e.getMessage());
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // Event deleted successfully from the database
+                    Log.d("DeleteEvent", "Event deleted successfully.");
+                } else {
+                    // Handle error if event deletion from the database fails
+                    Log.e("DeleteEventError", "Error deleting event: " + task.getException());
+                }
             }
         });
+    }
+    private int findEventIndexById(String eventId) {
+        for (int i = 0; i < eventList.size(); i++) {
+            if (eventList.get(i).getEventId().equals(eventId)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // Sort the eventList based on their start time in ascending order
@@ -312,12 +326,12 @@ public class HomeActivity extends ComponentActivity {
             }
         });
 
-}
+    }
     private void fetchWeatherData(double latitude, double longitude) {
         String apiKey = "aa77259b5b6b4c988ee212953230408";
         String apiUrl = "http://api.weatherapi.com/v1/current.json?key=" + apiKey +
                 "&q=" + latitude + "," + longitude +
-                "&units=imperial"; // Specify imperial(US)units in the API request
+                "&units=imperial"; //imperial(US)units in the API request
 
         new Thread(new Runnable() {
             @Override

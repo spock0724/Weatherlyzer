@@ -23,9 +23,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,7 +37,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddEventActivity extends AppCompatActivity{
+public class AddEventActivity extends AppCompatActivity {
 
     private EditText eventTitleEditText;
     private TextView locationTextView;
@@ -79,15 +77,15 @@ public class AddEventActivity extends AppCompatActivity{
         //event.setOnPlaceFetchCompleteListener(this);
 
 
-        // Call deleteExpiredEvents every 60000 (maybe thats too often well see)
+        // Call deleteExpiredEvents every 60000 (maybe thats too often we'll see)
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 deleteExpiredEvents();
-                handler.postDelayed(this, 60000); // 1 minute = 60000 MAY MAKE LONGER
+                handler.postDelayed(this, 60000); // 1 minute = 60000
             }
-        }, 60000); // 1 minute = 60000
+        }, 60000); //   60000 =1mins
     }
 
 
@@ -138,7 +136,6 @@ public class AddEventActivity extends AppCompatActivity{
         });
 
 
-
         autocompleteButton = findViewById(R.id.autocompleteButton);
         autocompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +144,7 @@ public class AddEventActivity extends AppCompatActivity{
             }
         });
     }
+
     private void deleteExpiredEvents() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -315,6 +313,4 @@ public class AddEventActivity extends AppCompatActivity{
             eventsRef.child(eventId).setValue(event);
         }
     }
-
-
 }

@@ -33,6 +33,7 @@ public class Event {
 
     private String locationName;
 
+    //firebase instructions from site
     public Event() {
         // Empty constructor required by Firebase to deserialize data
     }
@@ -57,6 +58,7 @@ public class Event {
     public String getPlaceId() {
         return placeId;
     }
+
     private String eventId; // Add the eventId field
 
     // (Other methods)
@@ -73,6 +75,7 @@ public class Event {
     public interface OnPlaceFetchCompleteListener {
         void onPlaceFetchComplete(String locationName);
     }
+
     private OnPlaceFetchCompleteListener onPlaceFetchCompleteListener;
 
     public void setOnPlaceFetchCompleteListener(OnPlaceFetchCompleteListener listener) {
@@ -80,11 +83,10 @@ public class Event {
     }
 
 
-
-
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
+
     public double getLatitude() {
         return latitude;
     }
@@ -157,13 +159,18 @@ public class Event {
 
 
     // Method to get the name of the location
-    public String getLocationName() {
+    /*public String getLocationName() {
         if (location != null) {
             return location.getName();
         } else {
             return "Location not available";
         }
     }
+     */
+    public String getLocationName() {
+        return locationName;
+    }
+
 
 
     @Override
@@ -173,7 +180,13 @@ public class Event {
 
 
     public String getStartTimeAsString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mm a", Locale.getDefault());
+        return sdf.format(new Date(startTimeMillis));
+    }
+
+    public String getStartTimeAsStringForecast() {
+        //fix below to grab the date in this format: yyyy-MM-dd
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
     }
 }

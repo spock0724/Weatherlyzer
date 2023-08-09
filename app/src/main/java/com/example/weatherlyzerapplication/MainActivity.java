@@ -98,9 +98,9 @@ public class MainActivity extends ComponentActivity {
     }
 }
 //TODO I think we ditch this shared pref thing bc we have firebasenow (prop will delete everything below)
-    //private SharedPreferences sharedPreferences;
+//private SharedPreferences sharedPreferences;
 
-    //private UserDatabaseHelper userDbHelper;
+//private UserDatabaseHelper userDbHelper;
     /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {

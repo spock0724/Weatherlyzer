@@ -54,7 +54,11 @@
             android:exported="false"
             android:label="forgot_password_activity"
             android:theme="@style/Theme.WeatherlyzerApplication" />
-
+        <activity
+            android:name=".ViewEventActivity"
+            android:exported="false"
+            android:label="view_event_activity"
+            android:theme="@style/Theme.AppCompat"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCfQ6LNv7Nv0b4gXiQJu5ufE22_nT6Pvvk" />

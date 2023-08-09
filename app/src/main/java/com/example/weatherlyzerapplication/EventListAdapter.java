@@ -1,4 +1,3 @@
-
 package com.example.weatherlyzerapplication;
 
 import android.content.Context;

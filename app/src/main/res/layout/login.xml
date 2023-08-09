@@ -52,7 +52,7 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="Password"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#CDCDCD"
         app:layout_constraintEnd_toEndOf="parent"
