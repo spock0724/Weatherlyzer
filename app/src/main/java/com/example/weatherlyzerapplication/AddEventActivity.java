@@ -103,14 +103,12 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
 
-
         eventDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDateTimePicker();
             }
         });
-
 
         saveEventButton = findViewById(R.id.completeEvent);
         saveEventButton.setOnClickListener(new View.OnClickListener() {

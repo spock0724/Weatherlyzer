@@ -137,15 +137,12 @@ public class HomeActivity extends ComponentActivity {
                     weatherDataFetched = true; // Set the flag to true after the first fetch
                 }
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
             }
-
             @Override
             public void onProviderEnabled(String provider) {
             }
-
             @Override
             public void onProviderDisabled(String provider) {
             }
@@ -181,6 +178,7 @@ public class HomeActivity extends ComponentActivity {
         windSpeedTextView = findViewById(R.id.windSpeed);
         rainPercentageTextView = findViewById(R.id.rainPercentage);
         locationNameTextView = findViewById(R.id.eventLocation);
+
         weatherIconImageView = findViewById(R.id.weatherIcon);
     }
 
@@ -357,13 +355,13 @@ public class HomeActivity extends ComponentActivity {
                         double temperatureFahrenheit = current.getDouble("temp_f");
                         double windSpeedMph = current.getDouble("wind_mph");
                         double rainInches = current.getDouble("precip_in");
-// TODO fix
+//                      TODO fix
 //                      String weatherConditionCode = current.getString("condition:text");
                         int weatherConditionCode = current.getJSONObject("condition").getInt("code");
 
                         JSONObject location = jsonObject.getJSONObject("location");
                         String cityName = location.getString("name");
-// TODO fix
+//                      TODO fix
                         Drawable weatherIcon = getWeatherIcon(weatherConditionCode);
 
                         runOnUiThread(new Runnable() {
@@ -373,7 +371,7 @@ public class HomeActivity extends ComponentActivity {
                                 windSpeedTextView.setText(windSpeedMph + " mph");
                                 rainPercentageTextView.setText(rainInches + " in/hr");
                                 locationNameTextView.setText("Current Location: " + cityName);
-// TODO fix
+//                      TODO fix
                                 weatherIconImageView.setImageDrawable(weatherIcon);
 
                                 displayAttireRecommendation(temperatureFahrenheit, rainInches, weatherConditionCode);
@@ -427,7 +425,6 @@ public class HomeActivity extends ComponentActivity {
                 return getResources().getDrawable(R.drawable.weather_default_icon);
         }
     }
-
 
     //Addevent stuff below
     public void addEventToList(Event event) {
@@ -542,8 +539,8 @@ public class HomeActivity extends ComponentActivity {
 
         codeMsg = getAttireMessage(weatherConditionCode, temperatureFahrenheit, rainInches);
 
-
         TextView attireRecommendationTextView = findViewById(R.id.attireRecommendation);
+
         attireRecommendationTextView.setText(tempMsg + rainMsg + codeMsg);
     }
 

@@ -43,31 +43,27 @@ public class ViewEventActivity extends AppCompatActivity {
     private TextView startTimeTextView;
     private TextView tempTextView;
 
-
     private TextView lowTempTextView;
     private TextView attireRecTextView;
     private TextView highTempTextView;
     private TextView windSpeedTextView;
     private TextView rainPercentageTextView;
 
-
     private ImageView weatherIconImageView;
-
 
     private Button backButton;
     private Button deleteButton;
-
 
     private Drawable weatherIcon;
     private Event event;
     private String eventId;
     private DatabaseReference eventRef;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         getSupportActionBar().hide();
         setContentView(R.layout.viewevent);
 
@@ -88,6 +84,7 @@ public class ViewEventActivity extends AppCompatActivity {
         windSpeedTextView = findViewById(R.id.windSpeed);
         rainPercentageTextView = findViewById(R.id.rainPercentage);
         attireRecTextView = findViewById(R.id.attireReco);
+
         weatherIconImageView = findViewById(R.id.weatherIcon);
         backButton = findViewById(R.id.backButton2);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +130,6 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
 
-
     /*
         // Get the event details from the intent
         Event event = getIntent().getParcelableExtra("event");
@@ -148,7 +144,6 @@ public class ViewEventActivity extends AppCompatActivity {
         }
      */
     }
-
 
     private void fetchAndDisplayForecast(double latitude, double longitude, String eventDate) {
         Log.d("fetchAndDisplayForecast", "Latitude: " + latitude + ", Longitude: " + longitude);
@@ -201,6 +196,7 @@ public class ViewEventActivity extends AppCompatActivity {
                     double avgTempFahrenheit = dayObject.getDouble("avgtemp_f");
                     double maxWindMph = dayObject.getDouble("maxwind_mph");
                     double totalPrecipInches = dayObject.getDouble("totalprecip_in");
+
                     int avgHumidity = dayObject.getInt("avghumidity");
                     String weatherConditionText = dayObject.getJSONObject("condition").getString("text");
                     String weatherConditionIcon = dayObject.getJSONObject("condition").getString("icon");
@@ -220,6 +216,7 @@ public class ViewEventActivity extends AppCompatActivity {
                             windSpeedTextView.setText(maxWindMph + " mph");
                             rainPercentageTextView.setText(totalPrecipInches + " in/hr");
                             locationTextView.setText("Location Area: " + cityName);
+
                             displayAttireRecommendation(avgTempFahrenheit,totalPrecipInches,weatherConditionCode);
                             weatherIconImageView.setImageDrawable(weatherIcon);
 
@@ -241,7 +238,6 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 
     private void deleteEvent() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -267,7 +263,6 @@ public class ViewEventActivity extends AppCompatActivity {
                     });
         }
     }
-
 
     private String getAttireMessage(int weatherConditionCode, double avgTempFahrenheit, double totalPrecipInches) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
@@ -349,7 +344,6 @@ public class ViewEventActivity extends AppCompatActivity {
         }
     }
 
-
     private void displayAttireRecommendation(double avgTempFahrenheit, double totalPrecipInches, int weatherConditionCode ) {
         String tempMsg;
         String rainMsg;
@@ -376,12 +370,10 @@ public class ViewEventActivity extends AppCompatActivity {
         }
 
         codeMsg = getAttireMessage(weatherConditionCode, avgTempFahrenheit, totalPrecipInches);
-
         TextView attireRecTextView = findViewById(R.id.attireReco);
         String fullMessage = tempMsg + rainMsg + codeMsg;
         attireRecTextView.setText(fullMessage);
     }
-
 
     private Drawable getWeatherIcon(int weatherConditionCode) {
         switch (weatherConditionCode) {
@@ -404,4 +396,3 @@ public class ViewEventActivity extends AppCompatActivity {
         }
     }
 }
-

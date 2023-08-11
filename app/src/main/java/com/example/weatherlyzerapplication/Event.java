@@ -63,7 +63,6 @@ public class Event {
 
     // (Other methods)
 
-
     public String getEventId() {
         return eventId;
     }
@@ -114,7 +113,6 @@ public class Event {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
-
 
     // Method to fetch place details using the placeId
     // Method to fetch place details using the placeId

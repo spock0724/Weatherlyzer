@@ -32,8 +32,10 @@ public class ForgotPasswordActivity extends ComponentActivity {
         setContentView(R.layout.forgotpassword);
 
         mAuth = FirebaseAuth.getInstance();
+
         cancelButton = findViewById(R.id.cancelButton);
         sendEmailButton = findViewById(R.id.sendEmailButton);
+
         editEmail = findViewById(R.id.editEmail);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
