@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -194,20 +196,6 @@ public class HomeActivity extends ComponentActivity {
         });
     }
 
-    private void showDeleteConfirmationDialog(final String eventId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete Event");
-        builder.setMessage("Are you sure you want to delete this event?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User confirmed the delete, so delete the event from the list and the database
-                deleteEvent(eventId);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
-    }
 
     private void deleteEvent(String eventId) {
         // Remove the event from the list
@@ -253,20 +241,6 @@ public class HomeActivity extends ComponentActivity {
         }
         return -1;
     }
-
-    // Sort the eventList based on their start time in ascending order
-    /*
-        Collections.sort(eventList, new Comparator<Event>() {
-            @Override
-            public int compare(Event event1, Event event2) {
-                return Long.compare(event1.getStartTimeMillis(), event2.getStartTimeMillis());
-            }
-        });
-
-        // Notify the adapter that the data has changed, and the ListView will reorder the events
-        eventListAdapter.notifyDataSetChanged();
-    }
-     */
 
     private void fetchEventsFromDatabase() {
         // Get the current user ID
