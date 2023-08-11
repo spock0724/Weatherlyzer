@@ -74,15 +74,13 @@ public class CreateAccountActivity extends ComponentActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Account creation successful, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
                                 String userId = user.getUid();
-                                // save additional user details to the database
                                 saveUserDataToDatabase(userId, name, email, username);
                             }
                         } else {
-                            // Account creation failed, display a message to the user.
+                            //creation failed,
                             Toast.makeText(CreateAccountActivity.this, "Failed to create account: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }

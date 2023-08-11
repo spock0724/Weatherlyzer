@@ -9,6 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.SystemClock;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,14 +97,13 @@ public class ViewEventActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        Button deleteButton = findViewById(R.id.deleteEventButton);
+        deleteButton = findViewById(R.id.deleteEventButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteEvent();
             }
         });
-
 
 
         eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -113,7 +118,6 @@ public class ViewEventActivity extends AppCompatActivity {
                         Log.d("ViewEventActivity", "Event data from Firebase: " + event.toString());
                         eventNameTextView.setText(event.getTitle());
                         startTimeTextView.setText(event.getStartTimeAsString());
-                        //temp under
                         String eventDate = event.getStartTimeAsStringForecast();
 
                         fetchAndDisplayForecast(event.getLatitude(), event.getLongitude(), eventDate);
@@ -129,23 +133,7 @@ public class ViewEventActivity extends AppCompatActivity {
                 Log.e("ViewEventActivity", "Database error: " + databaseError.getMessage());
             }
         });
-
-    /*
-        // Get the event details from the intent
-        Event event = getIntent().getParcelableExtra("event");
-
-        if (event != null) {
-            eventNameTextView.setText(event.getTitle());
-            locationTextView.setText(event.getLocationName());
-            startTimeTextView.setText(event.getStartTimeAsString());
-
-            // Fetch and display forecast data using the event's location
-            fetchAndDisplayForecast(event.getLatitude(), event.getLongitude());
-        }
-     */
     }
-
-
 
     private void fetchAndDisplayForecast(double latitude, double longitude, String eventDate) {
         Log.d("fetchAndDisplayForecast", "Latitude: " + latitude + ", Longitude: " + longitude);
@@ -179,18 +167,18 @@ public class ViewEventActivity extends AppCompatActivity {
                     bufferedReader.close();
                     connection.disconnect();
 
-                    // Log the raw JSON response for debugging
+                    // raw JSON response for debugging
                     Log.d("WeatherData", "Raw JSON Response: " + response.toString());
 
                     JSONObject jsonObject = new JSONObject(response.toString());
 
-                    // Get forecastday array
+                    //forecastday array
                     JSONArray forecastdayArray = jsonObject.getJSONObject("forecast").getJSONArray("forecastday");
 
-                    // Get first forecastday object
+                    // (first)forecastday object
                     JSONObject firstForecastDay = forecastdayArray.getJSONObject(0);
 
-                    // Get day object within forecastday
+                    // day object within forecastday
                     JSONObject dayObject = firstForecastDay.getJSONObject("day");
 
                     double maxTempFahrenheit = dayObject.getDouble("maxtemp_f");
@@ -207,6 +195,14 @@ public class ViewEventActivity extends AppCompatActivity {
                     String cityName = location.getString("name");
 
                     Drawable weatherIcon = getWeatherIcon(weatherConditionCode);
+                    String eventName = eventNameTextView.getText().toString();
+                    //ToDo make notifications work
+                    /*
+                    String attireRecommendation = getAttireMessage(weatherConditionCode, avgTempFahrenheit, totalPrecipInches);
+
+                    // Call the displayNotification method to schedule the notification
+                    //displayNotification(eventName, attireRecommendation);
+                     */
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -235,9 +231,14 @@ public class ViewEventActivity extends AppCompatActivity {
                         }
                     });
                 }
+
             }
+
+
         }).start();
+
     }
+
     private void deleteEvent() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -249,7 +250,7 @@ public class ViewEventActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            // Event deleted successfully, close the activity
+                            //deleted successfully close the activity
                             finish();
                         }
                     })
@@ -392,5 +393,28 @@ public class ViewEventActivity extends AppCompatActivity {
                 return getResources().getDrawable(R.drawable.weather_default_icon);
         }
     }
+    //TODO make the notifications work
+    /*
+    private void displayNotification(String eventName, String attireRecommendation) {
+        // Calculate the time for the notification (24 hours before the event)
+        //long notificationTime = event.getStartTimeMillis() - (24 * 60 * 60 * 1000);
+
+        // Calculate the time for the notification (5 minutes before the event)
+        long notificationTime = event.getStartTimeMillis() - (5 * 60 * 1000); // 5 minutes in milliseconds
+
+
+        // Create an intent for the notification
+        Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+        notificationIntent.putExtra("event_name", eventName);
+        notificationIntent.putExtra("attire_recommendation", attireRecommendation);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Schedule the notification using AlarmManager
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + notificationTime, pendingIntent);
+    }
+     */
+
 }
 

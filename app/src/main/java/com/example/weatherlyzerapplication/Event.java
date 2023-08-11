@@ -29,7 +29,7 @@ public class Event {
     private double longitude;
 
     private long startTimeMillis;
-    private Place location; // Add the Place field
+    private Place location;
 
     private String locationName;
 
@@ -44,7 +44,7 @@ public class Event {
         this.placeId = placeId;
         this.startTimeMillis = startTimeMillis;
         this.locationName = "";
-        this.createPlaceFromId(placeId, context); // Fetch and set the location asynchronously
+        this.createPlaceFromId(placeId, context);
     }
 
     public String getTitle() {
@@ -59,9 +59,7 @@ public class Event {
         return placeId;
     }
 
-    private String eventId; // Add the eventId field
-
-    // (Other methods)
+    private String eventId;
 
     public String getEventId() {
         return eventId;
@@ -116,8 +114,6 @@ public class Event {
         this.locationName = locationName;
     }
 
-    // Method to fetch place details using the placeId
-    // Method to fetch place details using the placeId
     private void createPlaceFromId(String placeId, Context context) {
         // Initialize the Places SDK if not already initialized.
         if (!Places.isInitialized()) {
@@ -135,9 +131,9 @@ public class Event {
                 if (task.isSuccessful()) {
                     FetchPlaceResponse response = task.getResult();
                     if (response != null) {
-                        location = response.getPlace(); // Set the location when fetched
+                        location = response.getPlace();
 
-                        // Set the latitude and longitude in the Event object
+                        // latitude and longitude in the Event
                         if (location != null && location.getLatLng() != null) {
                             latitude = location.getLatLng().latitude;
                             longitude = location.getLatLng().longitude;
@@ -146,27 +142,17 @@ public class Event {
                             onPlaceFetchCompleteListener.onPlaceFetchComplete(getLocationName());
                         }
                     } else {
-                        // Handle error if place is null.
+                        //log to find out if place is numm
                         Log.e("PlaceError", "Place not found");
                     }
                 } else {
-                    // Handle error if task was not successful.
+                    // log to find out if cant fetch.
                     Log.e("PlaceError", "Failed to fetch place details: " + task.getException());
                 }
             }
         });
     }
 
-
-    // Method to get the name of the location
-    /*public String getLocationName() {
-        if (location != null) {
-            return location.getName();
-        } else {
-            return "Location not available";
-        }
-    }
-     */
     public String getLocationName() {
         return locationName;
     }
@@ -185,7 +171,6 @@ public class Event {
     }
 
     public String getStartTimeAsStringForecast() {
-        //fix below to grab the date in this format: yyyy-MM-dd
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
     }

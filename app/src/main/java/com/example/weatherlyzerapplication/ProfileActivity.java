@@ -51,21 +51,21 @@ public class ProfileActivity extends ComponentActivity {
         usernameTextView = findViewById(R.id.usernameTextView);
 
 
-        // Get the current user from Firebase Auth
+        // current user from Firebase Auth
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            // Get the user ID of the current user
+            //get UID user ID of the current user
             String userId = currentUser.getUid();
 
-            // Get the user data from the "users" node in the Firebase Database
+            // data from the "users" node in the Firebase
             DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
             usersRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // Retrieve user data from the DataSnapshot
+                    //user data from the DataSnapshot
                     User user = dataSnapshot.getValue(User.class);
 
-                    // Update the TextViews with user data
+                    // update the TextViews with user data
                     if (user != null) {
                         nameTextView.setText("Name: " + user.getName());
                         emailTextView.setText("Email: " + user.getEmail());
