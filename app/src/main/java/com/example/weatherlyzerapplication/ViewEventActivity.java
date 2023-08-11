@@ -113,7 +113,6 @@ public class ViewEventActivity extends AppCompatActivity {
                         Log.d("ViewEventActivity", "Event data from Firebase: " + event.toString());
                         eventNameTextView.setText(event.getTitle());
                         startTimeTextView.setText(event.getStartTimeAsString());
-                        //temp under
                         String eventDate = event.getStartTimeAsStringForecast();
 
                         fetchAndDisplayForecast(event.getLatitude(), event.getLongitude(), eventDate);
@@ -129,20 +128,6 @@ public class ViewEventActivity extends AppCompatActivity {
                 Log.e("ViewEventActivity", "Database error: " + databaseError.getMessage());
             }
         });
-
-    /*
-        // Get the event details from the intent
-        Event event = getIntent().getParcelableExtra("event");
-
-        if (event != null) {
-            eventNameTextView.setText(event.getTitle());
-            locationTextView.setText(event.getLocationName());
-            startTimeTextView.setText(event.getStartTimeAsString());
-
-            // Fetch and display forecast data using the event's location
-            fetchAndDisplayForecast(event.getLatitude(), event.getLongitude());
-        }
-     */
     }
 
 
@@ -179,18 +164,18 @@ public class ViewEventActivity extends AppCompatActivity {
                     bufferedReader.close();
                     connection.disconnect();
 
-                    // Log the raw JSON response for debugging
+                    // raw JSON response for debugging
                     Log.d("WeatherData", "Raw JSON Response: " + response.toString());
 
                     JSONObject jsonObject = new JSONObject(response.toString());
 
-                    // Get forecastday array
+                    //forecastday array
                     JSONArray forecastdayArray = jsonObject.getJSONObject("forecast").getJSONArray("forecastday");
 
-                    // Get first forecastday object
+                    // (first)forecastday object
                     JSONObject firstForecastDay = forecastdayArray.getJSONObject(0);
 
-                    // Get day object within forecastday
+                    // day object within forecastday
                     JSONObject dayObject = firstForecastDay.getJSONObject("day");
 
                     double maxTempFahrenheit = dayObject.getDouble("maxtemp_f");
@@ -249,7 +234,7 @@ public class ViewEventActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            // Event deleted successfully, close the activity
+                            //deleted successfully close the activity
                             finish();
                         }
                     })

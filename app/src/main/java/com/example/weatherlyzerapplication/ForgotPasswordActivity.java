@@ -60,7 +60,7 @@ public class ForgotPasswordActivity extends ComponentActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(ForgotPasswordActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
-                                finish(); // Finish the activity after sending the email
+                                finish();
                             } else {
                                 Toast.makeText(ForgotPasswordActivity.this, "Failed to send password reset email.", Toast.LENGTH_SHORT).show();
                             }
