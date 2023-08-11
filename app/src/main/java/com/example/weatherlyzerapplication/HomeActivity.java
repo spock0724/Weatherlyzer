@@ -41,8 +41,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.TimeZone;
 
 
@@ -68,7 +66,7 @@ public class HomeActivity extends ComponentActivity {
     private ArrayList<Event> eventList = new ArrayList<>();
     private EventListAdapter eventListAdapter;
 
-
+    //private ArrayAdapter<Event> eventAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +77,20 @@ public class HomeActivity extends ComponentActivity {
         eventListAdapter = new EventListAdapter(this, eventList);
         eventListView.setAdapter(eventListAdapter);
 
+        // TODO Add a click listener to the ListView
+        /*
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event selectedEvent = eventList.get(position);
+                String eventId = selectedEvent.getEventId();
+
+                // Show a delete confirmation AlertDialog with eventId as the tag
+                showDeleteConfirmationDialog(eventId);
+            }
+        });
+         */
+
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,29 +100,26 @@ public class HomeActivity extends ComponentActivity {
                 Intent intent = new Intent(HomeActivity.this, ViewEventActivity.class);
                 intent.putExtra("event_id", eventId);
                 startActivity(intent);
-
             }
         });
 
-        //Addevent stuff under
+        //Addeventstuff under
         Intent intent = getIntent();
         if (intent != null) {
             userId = intent.getLongExtra("user_id", -1); // -1 is the default value if the user ID is not provided
         }
-
         eventList = new ArrayList<>();
         eventListAdapter = new EventListAdapter(this, eventList);
 
-        //adapter to the ListView
+        // Set the adapter to the ListView
         eventListView = findViewById(R.id.eventListView);
         eventListView.setAdapter(eventListAdapter);
 
-        //  events from the database->add them to the eventList
+        // Fetch events from the database and add them to the eventList
         fetchEventsFromDatabase();
 
         setupViews();
         setupButtons();
-
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -118,18 +127,15 @@ public class HomeActivity extends ComponentActivity {
             public void onLocationChanged(Location location) {
                 if (!weatherDataFetched) {
                     fetchWeatherData(location.getLatitude(), location.getLongitude());
-                    weatherDataFetched = true;
+                    weatherDataFetched = true; // Set the flag to true after the first fetch
                 }
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
             }
-
             @Override
             public void onProviderEnabled(String provider) {
             }
-
             @Override
             public void onProviderDisabled(String provider) {
             }
@@ -165,6 +171,7 @@ public class HomeActivity extends ComponentActivity {
         windSpeedTextView = findViewById(R.id.windSpeed);
         rainPercentageTextView = findViewById(R.id.rainPercentage);
         locationNameTextView = findViewById(R.id.eventLocation);
+
         weatherIconImageView = findViewById(R.id.weatherIcon);
     }
 
@@ -182,13 +189,85 @@ public class HomeActivity extends ComponentActivity {
         addeventButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, AddEventActivity.class);
-                intent.putExtra("user_id", userId);
+                intent.putExtra("user_id", userId); // Pass the user ID
                 startActivityForResult(intent, 1);
             }
         });
-
-
     }
+
+    private void showDeleteConfirmationDialog(final String eventId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Event");
+        builder.setMessage("Are you sure you want to delete this event?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User confirmed the delete, so delete the event from the list and the database
+                deleteEvent(eventId);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void deleteEvent(String eventId) {
+        // Remove the event from the list
+        int eventIndex = findEventIndexById(eventId);
+        if (eventIndex != -1) {
+            eventList.remove(eventIndex);
+            eventListAdapter.notifyDataSetChanged();
+        }
+
+        // Delete the event from the Firebase database
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return; // Return if the user is not logged in
+        }
+
+        String userId = currentUser.getUid();
+
+        // Get a reference to the events node in the Firebase Database for the current user
+        DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId).child("events");
+
+        // Remove the event with the given eventId from the database
+
+        eventsRef.child(eventId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // Event deleted successfully from the database
+                    Log.d("DeleteEvent", "Event deleted successfully.");
+                } else {
+                    // Handle error if event deletion from the database fails
+                    Log.e("DeleteEventError", "Error deleting event: " + task.getException());
+                }
+            }
+        });
+    }
+
+    private int findEventIndexById(String eventId) {
+        for (int i = 0; i < eventList.size(); i++) {
+            if (eventList.get(i).getEventId().equals(eventId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // Sort the eventList based on their start time in ascending order
+    /*
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return Long.compare(event1.getStartTimeMillis(), event2.getStartTimeMillis());
+            }
+        });
+
+        // Notify the adapter that the data has changed, and the ListView will reorder the events
+        eventListAdapter.notifyDataSetChanged();
+    }
+     */
 
     private void fetchEventsFromDatabase() {
         // Get the current user ID
@@ -199,41 +278,33 @@ public class HomeActivity extends ComponentActivity {
 
         String userId = currentUser.getUid();
 
-        //reference to the events node in the Firebase Database for the current user(UID)
+        // Get a reference to the events node in the Firebase Database for the current user
         DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference()
                 .child("users").child(userId).child("events");
 
         eventsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                eventList.clear();
+                eventList.clear(); // Clear the existing list before adding new events
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                    // event ID from the Firebase snapshot key
+                    // Get the event ID from the Firebase snapshot key
                     String eventId = eventSnapshot.getKey();
 
-                    // event details from the snapshot value
+                    // Retrieve the event details from the snapshot value
                     Event event = eventSnapshot.getValue(Event.class);
 
-                    // setting of event ID in the Event object
+                    // Set the event ID in the Event object
                     event.setEventId(eventId);
 
                     if (event != null) {
                         eventList.add(event);
                     }
                 }
-                //Sort the events from cloest in time to furthest
-                Collections.sort(eventList, new Comparator<Event>() {
-                    @Override
-                    public int compare(Event event1, Event event2) {
-                        return Long.compare(event1.getStartTimeMillis(), event2.getStartTimeMillis());
-                    }
-                });
 
-                // Notify the adapter
+                // Notify the adapter that the data has changed
                 eventListAdapter.notifyDataSetChanged();
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -242,6 +313,7 @@ public class HomeActivity extends ComponentActivity {
         });
 
     }
+
     private void fetchWeatherData(double latitude, double longitude) {
         String apiKey = "aa77259b5b6b4c988ee212953230408";
         String apiUrl = "http://api.weatherapi.com/v1/current.json?key=" + apiKey +
@@ -266,7 +338,7 @@ public class HomeActivity extends ComponentActivity {
                     bufferedReader.close();
                     connection.disconnect();
 
-                    // debug with log
+                    // Log the raw JSON response for debugging
                     Log.d("WeatherData", "Raw JSON Response: " + response.toString());
 
                     JSONObject jsonObject = new JSONObject(response.toString());
@@ -276,16 +348,14 @@ public class HomeActivity extends ComponentActivity {
                         double temperatureFahrenheit = current.getDouble("temp_f");
                         double windSpeedMph = current.getDouble("wind_mph");
                         double rainInches = current.getDouble("precip_in");
-// TODO fix
+//                      TODO fix
 //                      String weatherConditionCode = current.getString("condition:text");
                         int weatherConditionCode = current.getJSONObject("condition").getInt("code");
 
-
                         JSONObject location = jsonObject.getJSONObject("location");
                         String cityName = location.getString("name");
-// TODO fix
+//                      TODO fix
                         Drawable weatherIcon = getWeatherIcon(weatherConditionCode);
-
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -294,7 +364,7 @@ public class HomeActivity extends ComponentActivity {
                                 windSpeedTextView.setText(windSpeedMph + " mph");
                                 rainPercentageTextView.setText(rainInches + " in/hr");
                                 locationNameTextView.setText("Current Location: " + cityName);
-// TODO fix
+//                      TODO fix
                                 weatherIconImageView.setImageDrawable(weatherIcon);
 
                                 displayAttireRecommendation(temperatureFahrenheit, rainInches, weatherConditionCode);
@@ -326,6 +396,7 @@ public class HomeActivity extends ComponentActivity {
             }
         }).start();
     }
+
     //TODO make more comprehensive
     private Drawable getWeatherIcon(int weatherConditionCode) {
         switch (weatherConditionCode) {
@@ -343,7 +414,7 @@ public class HomeActivity extends ComponentActivity {
                 return getResources().getDrawable(R.drawable.weather_fog_icon);
             // Add more cases for other weather conditions as needed
             default:
-                // Default weather icon if the condition code isnt connected to an image/for loading
+                // Default weather icon if the condition code is not recognized
                 return getResources().getDrawable(R.drawable.weather_default_icon);
         }
     }
@@ -353,7 +424,6 @@ public class HomeActivity extends ComponentActivity {
         eventList.add(event);
         eventListAdapter.notifyDataSetChanged();
     }
-
 
     private String getAttireMessage(int weatherConditionCode, double temperatureFahrenheit, double rainInches) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
@@ -428,13 +498,12 @@ public class HomeActivity extends ComponentActivity {
             case 1276:
             case 1279:
             case 1282:
-                // TODO ADD Other weather conditions(codes in assests folder from the weatherapi.com docs)
+                // TODO ADD Other weather conditions(codes in assests folder from api site)
                 return "Check the weather forecast for specific attire recommendations.";
             default:
                 return "";
         }
     }
-
 
     private void displayAttireRecommendation(double temperatureFahrenheit, double rainInches, int weatherConditionCode ) {
         String tempMsg;
@@ -463,8 +532,8 @@ public class HomeActivity extends ComponentActivity {
 
         codeMsg = getAttireMessage(weatherConditionCode, temperatureFahrenheit, rainInches);
 
-
         TextView attireRecommendationTextView = findViewById(R.id.attireRecommendation);
+
         attireRecommendationTextView.setText(tempMsg + rainMsg + codeMsg);
     }
 
@@ -483,7 +552,6 @@ public class HomeActivity extends ComponentActivity {
             addEventToList(event);
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

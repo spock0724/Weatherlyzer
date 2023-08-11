@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ForgotPasswordActivity extends ComponentActivity {
+
     private Button cancelButton;
     private Button sendEmailButton;
     private EditText editEmail;
@@ -31,8 +32,10 @@ public class ForgotPasswordActivity extends ComponentActivity {
         setContentView(R.layout.forgotpassword);
 
         mAuth = FirebaseAuth.getInstance();
+
         cancelButton = findViewById(R.id.cancelButton);
         sendEmailButton = findViewById(R.id.sendEmailButton);
+
         editEmail = findViewById(R.id.editEmail);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {

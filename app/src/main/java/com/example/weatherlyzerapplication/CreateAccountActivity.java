@@ -40,6 +40,7 @@ public class CreateAccountActivity extends ComponentActivity {
         emailEditText = findViewById(R.id.editEmail);
         usernameEditText = findViewById(R.id.editUsername);
         passwordEditText = findViewById(R.id.editPassword);
+
         createAccountButton = findViewById(R.id.createButton);
         cancelButton = findViewById(R.id.cancelButton);
 
@@ -58,7 +59,6 @@ public class CreateAccountActivity extends ComponentActivity {
                 }
             }
         });
-
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +88,7 @@ public class CreateAccountActivity extends ComponentActivity {
 
     private void saveUserDataToDatabase(String userId, String name, String email, String username) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+
         User user = new User(name, email, username);
         usersRef.child(userId).setValue(user);
 

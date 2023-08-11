@@ -63,6 +63,7 @@ public class ViewEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         getSupportActionBar().hide();
         setContentView(R.layout.viewevent);
 
@@ -83,6 +84,7 @@ public class ViewEventActivity extends AppCompatActivity {
         windSpeedTextView = findViewById(R.id.windSpeed);
         rainPercentageTextView = findViewById(R.id.rainPercentage);
         attireRecTextView = findViewById(R.id.attireReco);
+
         weatherIconImageView = findViewById(R.id.weatherIcon);
         backButton = findViewById(R.id.backButton2);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +101,6 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
 
-
-
         eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -113,6 +113,7 @@ public class ViewEventActivity extends AppCompatActivity {
                         Log.d("ViewEventActivity", "Event data from Firebase: " + event.toString());
                         eventNameTextView.setText(event.getTitle());
                         startTimeTextView.setText(event.getStartTimeAsString());
+                        //temp under
                         String eventDate = event.getStartTimeAsStringForecast();
 
                         fetchAndDisplayForecast(event.getLatitude(), event.getLongitude(), eventDate);
@@ -128,9 +129,21 @@ public class ViewEventActivity extends AppCompatActivity {
                 Log.e("ViewEventActivity", "Database error: " + databaseError.getMessage());
             }
         });
+
+    /*
+        // Get the event details from the intent
+        Event event = getIntent().getParcelableExtra("event");
+
+        if (event != null) {
+            eventNameTextView.setText(event.getTitle());
+            locationTextView.setText(event.getLocationName());
+            startTimeTextView.setText(event.getStartTimeAsString());
+
+            // Fetch and display forecast data using the event's location
+            fetchAndDisplayForecast(event.getLatitude(), event.getLongitude());
+        }
+     */
     }
-
-
 
     private void fetchAndDisplayForecast(double latitude, double longitude, String eventDate) {
         Log.d("fetchAndDisplayForecast", "Latitude: " + latitude + ", Longitude: " + longitude);
@@ -164,18 +177,18 @@ public class ViewEventActivity extends AppCompatActivity {
                     bufferedReader.close();
                     connection.disconnect();
 
-                    // raw JSON response for debugging
+                    // Log the raw JSON response for debugging
                     Log.d("WeatherData", "Raw JSON Response: " + response.toString());
 
                     JSONObject jsonObject = new JSONObject(response.toString());
 
-                    //forecastday array
+                    // Get forecastday array
                     JSONArray forecastdayArray = jsonObject.getJSONObject("forecast").getJSONArray("forecastday");
 
-                    // (first)forecastday object
+                    // Get first forecastday object
                     JSONObject firstForecastDay = forecastdayArray.getJSONObject(0);
 
-                    // day object within forecastday
+                    // Get day object within forecastday
                     JSONObject dayObject = firstForecastDay.getJSONObject("day");
 
                     double maxTempFahrenheit = dayObject.getDouble("maxtemp_f");
@@ -183,6 +196,7 @@ public class ViewEventActivity extends AppCompatActivity {
                     double avgTempFahrenheit = dayObject.getDouble("avgtemp_f");
                     double maxWindMph = dayObject.getDouble("maxwind_mph");
                     double totalPrecipInches = dayObject.getDouble("totalprecip_in");
+
                     int avgHumidity = dayObject.getInt("avghumidity");
                     String weatherConditionText = dayObject.getJSONObject("condition").getString("text");
                     String weatherConditionIcon = dayObject.getJSONObject("condition").getString("icon");
@@ -202,6 +216,7 @@ public class ViewEventActivity extends AppCompatActivity {
                             windSpeedTextView.setText(maxWindMph + " mph");
                             rainPercentageTextView.setText(totalPrecipInches + " in/hr");
                             locationTextView.setText("Location Area: " + cityName);
+
                             displayAttireRecommendation(avgTempFahrenheit,totalPrecipInches,weatherConditionCode);
                             weatherIconImageView.setImageDrawable(weatherIcon);
 
@@ -223,6 +238,7 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         }).start();
     }
+
     private void deleteEvent() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -234,7 +250,7 @@ public class ViewEventActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            //deleted successfully close the activity
+                            // Event deleted successfully, close the activity
                             finish();
                         }
                     })
@@ -247,6 +263,7 @@ public class ViewEventActivity extends AppCompatActivity {
                     });
         }
     }
+
     private String getAttireMessage(int weatherConditionCode, double avgTempFahrenheit, double totalPrecipInches) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
@@ -326,6 +343,7 @@ public class ViewEventActivity extends AppCompatActivity {
                 return "";
         }
     }
+
     private void displayAttireRecommendation(double avgTempFahrenheit, double totalPrecipInches, int weatherConditionCode ) {
         String tempMsg;
         String rainMsg;
@@ -352,11 +370,11 @@ public class ViewEventActivity extends AppCompatActivity {
         }
 
         codeMsg = getAttireMessage(weatherConditionCode, avgTempFahrenheit, totalPrecipInches);
-
-        attireRecTextView = findViewById(R.id.attireReco);
+        TextView attireRecTextView = findViewById(R.id.attireReco);
         String fullMessage = tempMsg + rainMsg + codeMsg;
         attireRecTextView.setText(fullMessage);
     }
+
     private Drawable getWeatherIcon(int weatherConditionCode) {
         switch (weatherConditionCode) {
             case 1000:

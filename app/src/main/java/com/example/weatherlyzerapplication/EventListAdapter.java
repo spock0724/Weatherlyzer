@@ -11,6 +11,7 @@ import java.util.List;
 
 //Adapts and event into the list view on home
 public class EventListAdapter extends ArrayAdapter<Event> {
+
     private Context context;
     private List<Event> eventList;
 
@@ -35,11 +36,9 @@ public class EventListAdapter extends ArrayAdapter<Event> {
 
         titleTextView.setText(currentEvent.getTitle());
         locationTextView.setText(currentEvent.getLocationName());
-
         dateTextView.setText(currentEvent.getStartTimeAsString());
 
         String formattedStartTime = currentEvent.getStartTimeAsString();
-
         dateTextView.setText(formattedStartTime);
 
         int paddingInDp = 8; // adjust this value to increase or decrease the space between events (NOT the words!!)
