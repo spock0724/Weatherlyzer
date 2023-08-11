@@ -280,7 +280,7 @@ public class ViewEventActivity extends AppCompatActivity {
             case 1195:
                 // Rainy weather conditions
                 if (totalPrecipInches > 0.1) {
-                    return "rain is expected. Don't forget your raincoat or umbrella!";
+                    return "Don't forget your raincoat or umbrella!";
                 } else {
                     return "light rain is possible. You may want to bring an umbrella.";
                 }
@@ -346,7 +346,7 @@ public class ViewEventActivity extends AppCompatActivity {
         }
 
         if(totalPrecipInches>0.1){
-            rainMsg = " Rain is expected. ";
+            rainMsg = " rain is expected. ";
         } else {
             rainMsg = " ";
         }
@@ -371,7 +371,19 @@ public class ViewEventActivity extends AppCompatActivity {
             case 1135:
                 // Weather is foggy
                 return getResources().getDrawable(R.drawable.weather_fog_icon);
-            // Add more cases for other weather conditions as needed
+            case 1063:
+            case 1066:
+            case 1069:
+            case 1072:
+            case 1180:
+            case 1183:
+            case 1186:
+            case 1189:
+            case 1192:
+            case 1195:
+                // Weather is rainy
+                return getResources().getDrawable(R.drawable.weather_rain_icon);
+            // pls add more cases for other weather conditions
             default:
                 // Default weather icon if the condition code is not recognized
                 return getResources().getDrawable(R.drawable.weather_default_icon);

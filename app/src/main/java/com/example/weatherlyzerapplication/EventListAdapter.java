@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+//Adapts and event into the list view on home
 public class EventListAdapter extends ArrayAdapter<Event> {
     private Context context;
     private List<Event> eventList;

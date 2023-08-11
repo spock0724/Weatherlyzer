@@ -43,7 +43,6 @@ public class CreateAccountActivity extends ComponentActivity {
         createAccountButton = findViewById(R.id.createButton);
         cancelButton = findViewById(R.id.cancelButton);
 
-
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +91,7 @@ public class CreateAccountActivity extends ComponentActivity {
         User user = new User(name, email, username);
         usersRef.child(userId).setValue(user);
 
-        // After saving the user data go auto back 2 thelogin page
+        // After saving the user data go auto back 2 the login page
         Toast.makeText(CreateAccountActivity.this, "User created successfully", Toast.LENGTH_SHORT).show();
         onBackPressed();
     }

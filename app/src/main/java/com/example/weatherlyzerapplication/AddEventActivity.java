@@ -1,41 +1,41 @@
 package com.example.weatherlyzerapplication;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
+        import android.app.DatePickerDialog;
+        import android.app.TimePickerDialog;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import android.util.Log;
+        import android.view.View;
+        import android.view.Window;
+        import android.widget.Button;
+        import android.widget.DatePicker;
+        import android.widget.EditText;
+        import android.widget.TextView;
+        import android.widget.TimePicker;
+        import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+        import androidx.annotation.NonNull;
+        import androidx.annotation.Nullable;
+        import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+        import com.google.android.gms.common.api.Status;
+        import com.google.android.libraries.places.api.Places;
+        import com.google.android.libraries.places.api.model.Place;
+        import com.google.android.libraries.places.widget.Autocomplete;
+        import com.google.android.libraries.places.widget.AutocompleteActivity;
+        import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+        import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+        import java.util.Arrays;
+        import java.util.Calendar;
+        import java.util.List;
 
 public class AddEventActivity extends AppCompatActivity {
 
@@ -70,9 +70,10 @@ public class AddEventActivity extends AppCompatActivity {
         // Initialize the event object
         event = new Event("", "", 0, getApplicationContext());
 
-        // Call deleteExpiredEvents every 60000 millisecons (maybe thats too often we'll see)
+        // Call deleteExpiredEvents every 60000 milliseconds (adjust for how often)
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
+
             @Override
             public void run() {
                 deleteExpiredEvents();
@@ -111,10 +112,11 @@ public class AddEventActivity extends AppCompatActivity {
                 String placeId = "";
                 latitude = selectedPlace.getLatLng().latitude;
                 longitude = selectedPlace.getLatLng().longitude;
-                // Initialize th placeId variable
+
+                // Initialize placeId variable
 
                 if (selectedPlace != null) {
-                    placeId = selectedPlace.getId(); // GetplaceId from the selected Place
+                    placeId = selectedPlace.getId(); // Get the placeId from the selected Place
                 }
 
                 if (!title.isEmpty() && !placeId.isEmpty()) {
@@ -130,9 +132,7 @@ public class AddEventActivity extends AppCompatActivity {
         autocompleteButton = findViewById(R.id.autocompleteButton);
         autocompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startAutocompleteActivity();
-            }
+            public void onClick(View v) {startAutocompleteActivity(); }
         });
     }
 
@@ -152,7 +152,7 @@ public class AddEventActivity extends AppCompatActivity {
                     for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                         Event event = eventSnapshot.getValue(Event.class);
                         if (event != null && event.getStartTimeMillis() < currentTimeMillis) {
-                            // Out with the old
+                            // Delete event if start time is in the past
                             eventSnapshot.getRef().removeValue();
                         }
                     }
@@ -203,6 +203,7 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                // Handle result of autocomplete
                 if (data != null) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     selectedPlace = place;

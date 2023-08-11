@@ -169,7 +169,7 @@ public class Event {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mm a", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
     }
-
+    //used for future forecast data in view event activity
     public String getStartTimeAsStringForecast() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
