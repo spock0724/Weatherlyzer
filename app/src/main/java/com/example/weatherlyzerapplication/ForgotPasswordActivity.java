@@ -70,7 +70,7 @@ public class ForgotPasswordActivity extends ComponentActivity {
                         }
                     });
         } else {
-            //error msg to insert empty fields
+            //Error msg to insert empty field for email
             Toast.makeText(ForgotPasswordActivity.this, "Please enter your email.", Toast.LENGTH_SHORT).show();
         }
     }

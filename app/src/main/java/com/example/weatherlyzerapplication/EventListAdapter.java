@@ -45,6 +45,7 @@ public class EventListAdapter extends ArrayAdapter<Event> {
         int paddingInPx = (int) (paddingInDp * context.getResources().getDisplayMetrics().density);
         itemView.setPadding(0, 0, 0, paddingInPx);
 
+        //sends events into the itemview on home
         return itemView;
     }
 }

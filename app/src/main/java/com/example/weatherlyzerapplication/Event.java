@@ -28,7 +28,6 @@ public class Event {
     private String placeId;
     private double latitude;
     private double longitude;
-
     private long startTimeMillis;
     private Place location; // Add the Place field
 

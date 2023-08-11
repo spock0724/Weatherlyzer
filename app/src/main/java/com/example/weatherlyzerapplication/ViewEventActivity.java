@@ -403,7 +403,7 @@ public class ViewEventActivity extends AppCompatActivity {
                 return getResources().getDrawable(R.drawable.weather_rain_icon);
             // pls add more cases for other weather conditions
             default:
-                // Default weather icon if the condition code is not recognized
+                // Default weather (SUN) icon if the condition code is not recognized
                 return getResources().getDrawable(R.drawable.weather_default_icon);
         }
     }

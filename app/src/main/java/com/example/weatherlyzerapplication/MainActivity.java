@@ -17,8 +17,6 @@ public class MainActivity extends ComponentActivity {
     private EditText inputPassword;
     private Button loginButton;
     private Button createAccountButton;
-
-
     private Button forgotPasswordButton;
 
 

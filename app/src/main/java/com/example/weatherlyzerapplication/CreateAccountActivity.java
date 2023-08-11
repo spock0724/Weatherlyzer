@@ -26,7 +26,6 @@ public class CreateAccountActivity extends ComponentActivity {
     private EditText passwordEditText;
     private Button createAccountButton;
     private Button cancelButton;
-
     private FirebaseAuth mAuth;
 
     @Override

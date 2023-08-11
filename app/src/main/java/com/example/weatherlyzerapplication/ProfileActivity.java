@@ -60,7 +60,7 @@ public class ProfileActivity extends ComponentActivity {
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    //TODO Handle database read error
+                    //database read error
                     // (we can delete probs)
                 }
             });

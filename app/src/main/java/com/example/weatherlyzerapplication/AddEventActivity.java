@@ -233,7 +233,6 @@ public class AddEventActivity extends AppCompatActivity {
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
-
     private void saveEventToDatabase(String title, String placeId, Double latitude, Double longitude, long startTimeMillis) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {

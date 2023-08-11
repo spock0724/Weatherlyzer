@@ -53,7 +53,6 @@ public class HomeActivity extends ComponentActivity {
     private TextView rainPercentageTextView;
     private TextView locationNameTextView;
     private ImageView weatherIconImageView;
-
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
