@@ -14,13 +14,11 @@ public class EventListAdapter extends ArrayAdapter<Event> {
     private Context context;
     private List<Event> eventList;
 
-
     public EventListAdapter(Context context, List<Event> eventList) {
         super(context, 0, eventList);
         this.context = context;
         this.eventList = eventList;
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -37,11 +35,9 @@ public class EventListAdapter extends ArrayAdapter<Event> {
 
         titleTextView.setText(currentEvent.getTitle());
         locationTextView.setText(currentEvent.getLocationName());
-
         dateTextView.setText(currentEvent.getStartTimeAsString());
 
         String formattedStartTime = currentEvent.getStartTimeAsString();
-
         dateTextView.setText(formattedStartTime);
 
         int paddingInDp = 8; // adjust this value to increase or decrease the space between events (NOT the words!!)

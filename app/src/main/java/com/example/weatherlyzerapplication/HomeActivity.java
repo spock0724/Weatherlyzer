@@ -61,14 +61,11 @@ public class HomeActivity extends ComponentActivity {
     private TextView locationNameTextView;
     private ImageView weatherIconImageView;
 
-
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
 
-
     private boolean weatherDataFetched = false;
-
 
     //Addevent stuff under
     private long userId;
@@ -77,7 +74,6 @@ public class HomeActivity extends ComponentActivity {
     private EventListAdapter eventListAdapter;
 
     //private ArrayAdapter<Event> eventAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +97,6 @@ public class HomeActivity extends ComponentActivity {
             }
         });
          */
-
 
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -143,16 +138,13 @@ public class HomeActivity extends ComponentActivity {
                 }
             }
 
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
             }
 
-
             @Override
             public void onProviderEnabled(String provider) {
             }
-
 
             @Override
             public void onProviderDisabled(String provider) {
@@ -184,7 +176,6 @@ public class HomeActivity extends ComponentActivity {
         }
     }
 
-
     private void setupViews() {
         tempTextView = findViewById(R.id.temp);
         windSpeedTextView = findViewById(R.id.windSpeed);
@@ -192,7 +183,6 @@ public class HomeActivity extends ComponentActivity {
         locationNameTextView = findViewById(R.id.eventLocation);
         weatherIconImageView = findViewById(R.id.weatherIcon);
     }
-
 
     private void setupButtons() {
         profileButton = findViewById(R.id.profileButton);
@@ -214,7 +204,6 @@ public class HomeActivity extends ComponentActivity {
         });
     }
 
-
     private void showDeleteConfirmationDialog(final String eventId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete Event");
@@ -229,7 +218,6 @@ public class HomeActivity extends ComponentActivity {
         builder.setNegativeButton("Cancel", null);
         builder.show();
     }
-
 
     private void deleteEvent(String eventId) {
         // Remove the event from the list
@@ -252,6 +240,7 @@ public class HomeActivity extends ComponentActivity {
                 .child("users").child(userId).child("events");
 
         // Remove the event with the given eventId from the database
+
         eventsRef.child(eventId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -266,7 +255,6 @@ public class HomeActivity extends ComponentActivity {
         });
     }
 
-
     private int findEventIndexById(String eventId) {
         for (int i = 0; i < eventList.size(); i++) {
             if (eventList.get(i).getEventId().equals(eventId)) {
@@ -275,7 +263,6 @@ public class HomeActivity extends ComponentActivity {
         }
         return -1;
     }
-
 
     // Sort the eventList based on their start time in ascending order
     /*
@@ -290,7 +277,6 @@ public class HomeActivity extends ComponentActivity {
         eventListAdapter.notifyDataSetChanged();
     }
      */
-
 
     private void fetchEventsFromDatabase() {
         // Get the current user ID
@@ -336,7 +322,6 @@ public class HomeActivity extends ComponentActivity {
         });
 
     }
-
 
     private void fetchWeatherData(double latitude, double longitude) {
         String apiKey = "aa77259b5b6b4c988ee212953230408";
@@ -421,7 +406,6 @@ public class HomeActivity extends ComponentActivity {
         }).start();
     }
 
-
     //TODO make more comprehensive
     private Drawable getWeatherIcon(int weatherConditionCode) {
         switch (weatherConditionCode) {
@@ -450,7 +434,6 @@ public class HomeActivity extends ComponentActivity {
         eventList.add(event);
         eventListAdapter.notifyDataSetChanged();
     }
-
 
     private String getAttireMessage(int weatherConditionCode, double temperatureFahrenheit, double rainInches) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
@@ -532,7 +515,6 @@ public class HomeActivity extends ComponentActivity {
         }
     }
 
-
     private void displayAttireRecommendation(double temperatureFahrenheit, double rainInches, int weatherConditionCode ) {
         String tempMsg;
         String rainMsg;
@@ -565,7 +547,6 @@ public class HomeActivity extends ComponentActivity {
         attireRecommendationTextView.setText(tempMsg + rainMsg + codeMsg);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -581,7 +562,6 @@ public class HomeActivity extends ComponentActivity {
             addEventToList(event);
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

@@ -39,10 +39,8 @@ import java.util.List;
 
 public class AddEventActivity extends AppCompatActivity {
 
-
     private EditText eventTitleEditText;
     private TextView locationTextView;
-
 
     private String title;
     private EditText eventLocationEditText;
@@ -51,21 +49,19 @@ public class AddEventActivity extends AppCompatActivity {
     private Button exitButton;
     private Button autocompleteButton;
 
-
     private long selectedDateTimeMillis;
     private Event event;
     private Double latitude;
     private Double longitude;
 
-
     private Place selectedPlace;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1001;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         getSupportActionBar().hide();
         setContentView(R.layout.addevent);
         setupViews();
@@ -76,13 +72,12 @@ public class AddEventActivity extends AppCompatActivity {
 
         // Initialize the event object
         event = new Event("", "", 0, getApplicationContext());
-
         //event.setOnPlaceFetchCompleteListener(this);
-
 
         // Call deleteExpiredEvents every 60000 (maybe thats too often we'll see)
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
+
             @Override
             public void run() {
                 deleteExpiredEvents();
@@ -91,14 +86,13 @@ public class AddEventActivity extends AppCompatActivity {
         }, 60000); //   60000 =1mins
     }
 
-
     private void setupViews() {
         eventTitleEditText = findViewById(R.id.eventTitle);
         //eventLocationEditText = findViewById(R.id.autocomplete_fragment);
+
         eventDateEditText = findViewById(R.id.dateStart);
         locationTextView = findViewById(R.id.locationTextView);
     }
-
 
     private void setupButtons() {
         exitButton = findViewById(R.id.exitButton);
@@ -109,12 +103,14 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
 
+
         eventDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDateTimePicker();
             }
         });
+
 
         saveEventButton = findViewById(R.id.completeEvent);
         saveEventButton.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +120,7 @@ public class AddEventActivity extends AppCompatActivity {
                 String placeId = ""; //
                 latitude = selectedPlace.getLatLng().latitude;
                 longitude = selectedPlace.getLatLng().longitude;
+
                 // Initialize placeId variable
 
                 if (selectedPlace != null) {
@@ -140,6 +137,7 @@ public class AddEventActivity extends AppCompatActivity {
         });
 
         autocompleteButton = findViewById(R.id.autocompleteButton);
+
         autocompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +145,6 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void deleteExpiredEvents() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -179,7 +176,6 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
-
     private void showDateTimePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -210,7 +206,6 @@ public class AddEventActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -239,7 +234,6 @@ public class AddEventActivity extends AppCompatActivity {
             }
         }
     }
-
 
     /*
     @Override
@@ -282,7 +276,6 @@ public class AddEventActivity extends AppCompatActivity {
     }
     */
 
-
     private void startAutocompleteActivity() {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
 
@@ -291,7 +284,6 @@ public class AddEventActivity extends AppCompatActivity {
                 .build(this);
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
-
 
     private void saveEventToDatabase(String title, String placeId, Double latitude, Double longitude, long startTimeMillis) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

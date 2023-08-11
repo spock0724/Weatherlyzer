@@ -24,9 +24,7 @@ public class ForgotPasswordActivity extends ComponentActivity {
     private Button sendEmailButton;
     private EditText editEmail;
 
-
     private FirebaseAuth mAuth;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +50,6 @@ public class ForgotPasswordActivity extends ComponentActivity {
             }
         });
     }
-
 
     private void sendPasswordResetEmail() {
         String emailAddress = editEmail.getText().toString().trim();
