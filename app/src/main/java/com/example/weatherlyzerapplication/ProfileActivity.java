@@ -93,7 +93,7 @@ public class ProfileActivity extends ComponentActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-            }
+            }//way to go back one page if clicked
         });
 
     }

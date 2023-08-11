@@ -197,16 +197,6 @@ public class HomeActivity extends ComponentActivity {
 
     }
 
-
-    private int findEventIndexById(String eventId) {
-        for (int i = 0; i < eventList.size(); i++) {
-            if (eventList.get(i).getEventId().equals(eventId)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     private void fetchEventsFromDatabase() {
         // Get the current user ID
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -445,7 +435,7 @@ public class HomeActivity extends ComponentActivity {
             case 1276:
             case 1279:
             case 1282:
-                // TODO ADD Other weather conditions(codes in assests folder from api site)
+                // TODO ADD Other weather conditions(codes in assests folder from the weatherapi.com docs)
                 return "Check the weather forecast for specific attire recommendations.";
             default:
                 return "";
