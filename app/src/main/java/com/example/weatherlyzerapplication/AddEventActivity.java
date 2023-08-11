@@ -40,6 +40,10 @@ import java.util.List;
 public class AddEventActivity extends AppCompatActivity {
 
     private EditText eventTitleEditText;
+    private TextView locationTextView;
+
+    private String title;
+    private EditText eventLocationEditText;
     private EditText eventDateEditText;
     private Button saveEventButton;
     private Button exitButton;
@@ -53,7 +57,6 @@ public class AddEventActivity extends AppCompatActivity {
     private Place selectedPlace;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1001;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,11 +69,12 @@ public class AddEventActivity extends AppCompatActivity {
         String apiKey = "AIzaSyCfQ6LNv7Nv0b4gXiQJu5ufE22_nT6Pvvk";
         Places.initialize(getApplicationContext(), apiKey);
 
-
         // Initialize the event object
         event = new Event("", "", 0, getApplicationContext());
 
-        // Call deleteExpiredEvents every 60000 millisecons (maybe thats too often we'll see)
+        //event.setOnPlaceFetchCompleteListener(this);
+
+        // Call deleteExpiredEvents every 60000 (maybe thats too often we'll see)
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -81,10 +85,11 @@ public class AddEventActivity extends AppCompatActivity {
         }, 60000); //   60000 =1mins
     }
 
-
     private void setupViews() {
         eventTitleEditText = findViewById(R.id.eventTitle);
+        //eventLocationEditText = findViewById(R.id.autocomplete_fragment);
         eventDateEditText = findViewById(R.id.dateStart);
+        locationTextView = findViewById(R.id.locationTextView);
     }
 
     private void setupButtons() {
@@ -108,13 +113,13 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String title = eventTitleEditText.getText().toString();
-                String placeId = "";
+                String placeId = ""; //
                 latitude = selectedPlace.getLatLng().latitude;
                 longitude = selectedPlace.getLatLng().longitude;
-                // Initialize th placeId variable
+                // Initialize placeId variable
 
                 if (selectedPlace != null) {
-                    placeId = selectedPlace.getId(); // GetplaceId from the selected Place
+                    placeId = selectedPlace.getId(); // Get the placeId from the selected Place object
                 }
 
                 if (!title.isEmpty() && !placeId.isEmpty()) {
@@ -125,7 +130,6 @@ public class AddEventActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         autocompleteButton = findViewById(R.id.autocompleteButton);
         autocompleteButton.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +156,7 @@ public class AddEventActivity extends AppCompatActivity {
                     for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                         Event event = eventSnapshot.getValue(Event.class);
                         if (event != null && event.getStartTimeMillis() < currentTimeMillis) {
-                            // Out with the old
+                            // Delete the event if its start time is in the past
                             eventSnapshot.getRef().removeValue();
                         }
                     }
@@ -160,12 +164,11 @@ public class AddEventActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // TODO database errors (add errors)
+                    // Handle database errors if needed
                 }
             });
         }
     }
-
 
     private void showDateTimePicker() {
         Calendar calendar = Calendar.getInstance();
@@ -203,11 +206,12 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                // Handle the result of the autocomplete activity
                 if (data != null) {
                     Place place = Autocomplete.getPlaceFromIntent(data);
-                    selectedPlace = place;
+                    selectedPlace = place; // Assign the selected place to selectedPlace
 
-                    // put latitude and longitude from selectedPlace in the event
+                    // Get the latitude and longitude from selectedPlace and set them in the event
                     if (selectedPlace != null && selectedPlace.getLatLng() != null) {
                         double latitude = selectedPlace.getLatLng().latitude;
                         double longitude = selectedPlace.getLatLng().longitude;
@@ -216,6 +220,7 @@ public class AddEventActivity extends AppCompatActivity {
                     }
                 }
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // Handle errors that occurred in the autocomplete activity
                 Status status = Autocomplete.getStatusFromIntent(data);
                 if (status != null) {
                     Log.e("AutocompleteError", status.getStatusMessage());
@@ -224,14 +229,53 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    @Override
+    public void onPlaceSelected(Place place) {
+        // Handle the selected place here.
+        Log.d("PlaceSelected", "Place selected: " + place.getName());
+        eventLocationEditText.setText(place.getName());
+        // Update the location TextView with the latitude and longitude
+        LatLng latLng = place.getLatLng();
+        if (latLng != null) {
+            String latitudeLongitude = "Lat: " + latLng.latitude + ", Lng: " + latLng.longitude;
+            locationTextView.setText(latitudeLongitude);
+        }
+    }
+
+     */
+    /*
+    @Override
+    public void onPlaceFetchComplete(String locationName) {
+        locationTextView.setText(locationName);
+    }
+
+    @Override
+    public void onError(Status status) {
+        // Handle any errors that occurred during the autocomplete process here.
+        Log.e("AutocompleteError", status.getStatusMessage());
+    }
+    */
+
+    /*
+    private void startAutocompleteActivity() {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .build(this);
+        startAutocompleteLauncher.launch(intent);
+    }
+    */
+
     private void startAutocompleteActivity() {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
 
+        // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .build(this);
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
-
 
     private void saveEventToDatabase(String title, String placeId, Double latitude, Double longitude, long startTimeMillis) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -243,12 +287,15 @@ public class AddEventActivity extends AppCompatActivity {
 
             String eventId = eventsRef.push().getKey();
 
+            // Use selectedPlace object to get the city name
             String cityName = selectedPlace != null ? selectedPlace.getName() : "";
 
             Event event = new Event(title, placeId, startTimeMillis, getApplicationContext());
 
+            // Update the location field with the city name
             event.setLocationName(cityName);
 
+            // Get the latitude and longitude from selectedPlace and set them in the event
             if (selectedPlace != null && selectedPlace.getLatLng() != null) {
                 latitude = selectedPlace.getLatLng().latitude;
                 longitude = selectedPlace.getLatLng().longitude;

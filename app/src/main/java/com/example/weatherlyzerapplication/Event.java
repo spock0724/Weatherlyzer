@@ -29,7 +29,7 @@ public class Event {
     private double longitude;
 
     private long startTimeMillis;
-    private Place location;
+    private Place location; // Add the Place field
 
     private String locationName;
 
@@ -38,13 +38,12 @@ public class Event {
         // Empty constructor required by Firebase to deserialize data
     }
 
-
     public Event(String title, String placeId, long startTimeMillis, Context context) {
         this.title = title;
         this.placeId = placeId;
         this.startTimeMillis = startTimeMillis;
         this.locationName = "";
-        this.createPlaceFromId(placeId, context);
+        this.createPlaceFromId(placeId, context); // Fetch and set the location asynchronously
     }
 
     public String getTitle() {
@@ -59,7 +58,9 @@ public class Event {
         return placeId;
     }
 
-    private String eventId;
+    private String eventId; // Add the eventId field
+
+    // (Other methods)
 
     public String getEventId() {
         return eventId;
@@ -79,7 +80,6 @@ public class Event {
     public void setOnPlaceFetchCompleteListener(OnPlaceFetchCompleteListener listener) {
         this.onPlaceFetchCompleteListener = listener;
     }
-
 
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
@@ -114,6 +114,8 @@ public class Event {
         this.locationName = locationName;
     }
 
+    // Method to fetch place details using the placeId
+    // Method to fetch place details using the placeId
     private void createPlaceFromId(String placeId, Context context) {
         // Initialize the Places SDK if not already initialized.
         if (!Places.isInitialized()) {
@@ -131,9 +133,9 @@ public class Event {
                 if (task.isSuccessful()) {
                     FetchPlaceResponse response = task.getResult();
                     if (response != null) {
-                        location = response.getPlace();
+                        location = response.getPlace(); // Set the location when fetched
 
-                        // latitude and longitude in the Event
+                        // Set the latitude and longitude in the Event object
                         if (location != null && location.getLatLng() != null) {
                             latitude = location.getLatLng().latitude;
                             longitude = location.getLatLng().longitude;
@@ -142,28 +144,34 @@ public class Event {
                             onPlaceFetchCompleteListener.onPlaceFetchComplete(getLocationName());
                         }
                     } else {
-                        //log to find out if place is numm
+                        // Handle error if place is null.
                         Log.e("PlaceError", "Place not found");
                     }
                 } else {
-                    // log to find out if cant fetch.
+                    // Handle error if task was not successful.
                     Log.e("PlaceError", "Failed to fetch place details: " + task.getException());
                 }
             }
         });
     }
 
+    // Method to get the name of the location
+    /*public String getLocationName() {
+        if (location != null) {
+            return location.getName();
+        } else {
+            return "Location not available";
+        }
+    }
+     */
     public String getLocationName() {
         return locationName;
     }
-
-
 
     @Override
     public String toString() {
         return " " + title + " - " + getLocationName();
     }
-
 
     public String getStartTimeAsString() {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mm a", Locale.getDefault());
@@ -171,6 +179,7 @@ public class Event {
     }
 
     public String getStartTimeAsStringForecast() {
+        //fix below to grab the date in this format: yyyy-MM-dd
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
     }

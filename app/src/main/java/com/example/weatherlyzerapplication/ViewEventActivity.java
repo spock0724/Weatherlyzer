@@ -99,8 +99,6 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
 
-
-
         eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -129,8 +127,6 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void fetchAndDisplayForecast(double latitude, double longitude, String eventDate) {
         Log.d("fetchAndDisplayForecast", "Latitude: " + latitude + ", Longitude: " + longitude);

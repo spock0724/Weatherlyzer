@@ -50,22 +50,21 @@ public class ProfileActivity extends ComponentActivity {
         emailTextView = findViewById(R.id.emailTextView);
         usernameTextView = findViewById(R.id.usernameTextView);
 
-
-        // current user from Firebase Auth
+        // Get the current user from Firebase Auth
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            //get UID user ID of the current user
+            // Get the user ID of the current user
             String userId = currentUser.getUid();
 
-            // data from the "users" node in the Firebase
+            // Get the user data from the "users" node in the Firebase Database
             DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
             usersRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    //user data from the DataSnapshot
+                    // Retrieve user data from the DataSnapshot
                     User user = dataSnapshot.getValue(User.class);
 
-                    // update the TextViews with user data
+                    // Update the TextViews with user data
                     if (user != null) {
                         nameTextView.setText("Name: " + user.getName());
                         emailTextView.setText("Email: " + user.getEmail());
@@ -93,7 +92,7 @@ public class ProfileActivity extends ComponentActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-            }//way to go back one page if clicked
+            }
         });
 
     }
