@@ -23,15 +23,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends ComponentActivity {
+
     private EditText inputUsername;
     private EditText inputPassword;
     private Button loginButton;
     private Button createAccountButton;
 
+
     private Button forgotPasswordButton;
 
 
     private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class MainActivity extends ComponentActivity {
         });
     }
 
+
     private void loginUser() {
         String username = inputUsername.getText().toString().trim();
         String password = inputPassword.getText().toString().trim();
@@ -83,17 +87,82 @@ public class MainActivity extends ComponentActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // successful, navigate to the home again
+                            // Sign-in successful, navigate to the home again
                             Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
-                            finish(); // finish MainActivity so that you can't navigate back to it
+                            finish(); // Finish the MainActivity so that the user can't navigate back to it
                             // (UNLESS IN PROFILE PAGE with logout button!!)
                         } else {
-                            // else it fails, display error
+                            // If sign-in fails, display a message to the user.
                             Toast.makeText(MainActivity.this, "Authentication failed. Please check your credentials.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 }
+
+
+//TODO I think we ditch this shared pref thing bc we have firebasenow (prop will delete everything below)
+//private SharedPreferences sharedPreferences;
+
+//private UserDatabaseHelper userDbHelper;
+    /*
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        //userDbHelper = new UserDatabaseHelper(this); // Initialize the UserDatabaseHelper
+        setupButtons();
+    }
+
+    private void setupButtons() {
+        createaccount = findViewById(R.id.newaccountbutton);
+        button = findViewById(R.id.loginbutton);
+
+        createaccount.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CreateAccountActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        /*
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EditText uText = findViewById(R.id.inputUsername);
+                EditText pText = findViewById(R.id.inputPassword);
+                String username = uText.getText().toString();
+                String password = pText.getText().toString();
+
+                // Use the UserDatabaseHelper to authenticate the user
+                //User user = userDbHelper.getUserByUsernameAndPassword(username, password);
+                //if (user != null) {
+                //long userId = user.getId();
+
+                    // Save the logged-in user's ID to SharedPreferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                //    editor.putLong("userId", userId);
+                    editor.apply();
+
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                } else {
+                    uText.setText("");
+                    pText.setText("");
+                    uText.setError("Incorrect username and password combination.");
+                pText.setError("Incorrect username and password combination.");
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Close the database connection when the activity is destroyed
+        if (userDbHelper != null) {
+            userDbHelper.close();
+        }
+         */

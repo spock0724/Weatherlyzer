@@ -19,11 +19,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ForgotPasswordActivity extends ComponentActivity {
+
     private Button cancelButton;
     private Button sendEmailButton;
     private EditText editEmail;
 
+
     private FirebaseAuth mAuth;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class ForgotPasswordActivity extends ComponentActivity {
             }
         });
     }
+
 
     private void sendPasswordResetEmail() {
         String emailAddress = editEmail.getText().toString().trim();

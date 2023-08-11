@@ -39,6 +39,7 @@ public class ProfileActivity extends ComponentActivity {
     private TextView emailTextView;
     private TextView usernameTextView;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

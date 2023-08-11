@@ -10,14 +10,17 @@ import android.widget.TextView;
 import java.util.List;
 
 public class EventListAdapter extends ArrayAdapter<Event> {
+
     private Context context;
     private List<Event> eventList;
+
 
     public EventListAdapter(Context context, List<Event> eventList) {
         super(context, 0, eventList);
         this.context = context;
         this.eventList = eventList;
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

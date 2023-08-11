@@ -22,21 +22,26 @@ import java.util.Locale;
 
 @IgnoreExtraProperties
 public class Event {
+
     private Event event;
     private String title;
     private String placeId;
     private double latitude;
     private double longitude;
 
+
     private long startTimeMillis;
     private Place location; // Add the Place field
 
+
     private String locationName;
+
 
     //firebase instructions from site
     public Event() {
         // Empty constructor required by Firebase to deserialize data
     }
+
 
     public Event(String title, String placeId, long startTimeMillis, Context context) {
         this.title = title;
@@ -46,9 +51,11 @@ public class Event {
         this.createPlaceFromId(placeId, context); // Fetch and set the location asynchronously
     }
 
+
     public String getTitle() {
         return title;
     }
+
 
     public void setTitle(String title) {
         this.title = title;
@@ -66,20 +73,23 @@ public class Event {
         return eventId;
     }
 
+
     public void setEventId(String eventId) {
         this.eventId = eventId;
-
     }
+
 
     public interface OnPlaceFetchCompleteListener {
         void onPlaceFetchComplete(String locationName);
     }
+
 
     private OnPlaceFetchCompleteListener onPlaceFetchCompleteListener;
 
     public void setOnPlaceFetchCompleteListener(OnPlaceFetchCompleteListener listener) {
         this.onPlaceFetchCompleteListener = listener;
     }
+
 
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
@@ -113,6 +123,7 @@ public class Event {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
+
 
     // Method to fetch place details using the placeId
     // Method to fetch place details using the placeId
@@ -155,6 +166,7 @@ public class Event {
         });
     }
 
+
     // Method to get the name of the location
     /*public String getLocationName() {
         if (location != null) {
@@ -164,6 +176,8 @@ public class Event {
         }
     }
      */
+
+
     public String getLocationName() {
         return locationName;
     }
@@ -173,10 +187,12 @@ public class Event {
         return " " + title + " - " + getLocationName();
     }
 
+
     public String getStartTimeAsString() {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mm a", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
     }
+
 
     public String getStartTimeAsStringForecast() {
         //fix below to grab the date in this format: yyyy-MM-dd

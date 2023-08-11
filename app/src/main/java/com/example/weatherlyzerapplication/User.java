@@ -6,15 +6,18 @@ public class User {
     private String email;
     private String username;
 
+
     public User() {
         // Default constructor required for Firebase Database
     }
+
 
     public User(String name, String email, String username) {
         this.name = name;
         this.email = email;
         this.username = username;
     }
+
 
     public String getName() {
         return name;

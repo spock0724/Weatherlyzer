@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateAccountActivity extends ComponentActivity {
 
+
     private EditText nameEditText;
     private EditText emailEditText;
     private EditText usernameEditText;
@@ -27,7 +28,9 @@ public class CreateAccountActivity extends ComponentActivity {
     private Button createAccountButton;
     private Button cancelButton;
 
+
     private FirebaseAuth mAuth;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,6 @@ public class CreateAccountActivity extends ComponentActivity {
                 }
             }
         });
-
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +68,7 @@ public class CreateAccountActivity extends ComponentActivity {
             }
         });
     }
+
 
     private void createAccountWithEmailPassword(final String name, final String email, final String username, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -85,6 +88,7 @@ public class CreateAccountActivity extends ComponentActivity {
                     }
                 });
     }
+
 
     private void saveUserDataToDatabase(String userId, String name, String email, String username) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
