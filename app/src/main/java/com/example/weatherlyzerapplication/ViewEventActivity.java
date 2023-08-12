@@ -33,30 +33,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 public class ViewEventActivity extends AppCompatActivity {
 
     private TextView eventNameTextView;
     private TextView locationTextView;
     private TextView startTimeTextView;
-    private TextView tempTextView;
-
     private TextView lowTempTextView;
-    private TextView attireRecTextView;
     private TextView highTempTextView;
     private TextView windSpeedTextView;
     private TextView rainPercentageTextView;
 
     private ImageView weatherIconImageView;
+    private Event event;
 
     private Button backButton;
     private Button deleteButton;
 
-    private Drawable weatherIcon;
-    private Event event;
     private String eventId;
+
     private DatabaseReference eventRef;
 
     @Override
@@ -83,17 +78,17 @@ public class ViewEventActivity extends AppCompatActivity {
         highTempTextView = findViewById(R.id.highTemp);
         windSpeedTextView = findViewById(R.id.windSpeed);
         rainPercentageTextView = findViewById(R.id.rainPercentage);
-        attireRecTextView = findViewById(R.id.attireReco);
-
         weatherIconImageView = findViewById(R.id.weatherIcon);
         backButton = findViewById(R.id.backButton2);
+        deleteButton = findViewById(R.id.deleteEventButton);
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        Button deleteButton = findViewById(R.id.deleteEventButton);
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,7 +102,7 @@ public class ViewEventActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     Log.d("ViewEventActivity", "Event data snapshot key: " + dataSnapshot.getKey());
                     Log.d("ViewEventActivity", "Event data snapshot value: " + dataSnapshot.getValue());
-
+                    event = dataSnapshot.getValue(Event.class);
                     Event event = dataSnapshot.getValue(Event.class);
                     if (event != null) {
                         Log.d("ViewEventActivity", "Event data from Firebase: " + event.toString());
@@ -115,6 +110,7 @@ public class ViewEventActivity extends AppCompatActivity {
                         startTimeTextView.setText(event.getStartTimeAsString());
                         //temp under
                         String eventDate = event.getStartTimeAsStringForecast();
+                        String eventHour = event.getStartTimeAsMilitaryHourStringForecast();
 
                         fetchAndDisplayForecast(event.getLatitude(), event.getLongitude(), eventDate);
 
@@ -129,36 +125,20 @@ public class ViewEventActivity extends AppCompatActivity {
                 Log.e("ViewEventActivity", "Database error: " + databaseError.getMessage());
             }
         });
-
-    /*
-        // Get the event details from the intent
-        Event event = getIntent().getParcelableExtra("event");
-
-        if (event != null) {
-            eventNameTextView.setText(event.getTitle());
-            locationTextView.setText(event.getLocationName());
-            startTimeTextView.setText(event.getStartTimeAsString());
-
-            // Fetch and display forecast data using the event's location
-            fetchAndDisplayForecast(event.getLatitude(), event.getLongitude());
-        }
-     */
     }
 
     private void fetchAndDisplayForecast(double latitude, double longitude, String eventDate) {
         Log.d("fetchAndDisplayForecast", "Latitude: " + latitude + ", Longitude: " + longitude);
         String apiKey = "aa77259b5b6b4c988ee212953230408";
         String dt = eventDate; // Extract yyyy-MM-dd format date
-        //String hour = eventHour; // Use the event's start hour
-        //String dt = "2023-08-14"; // Example date in yyyy-MM-dd format
-        String hour = "12"; // Example hour in 24-hour format
+        //String hour = eventHour; // TODO fix Use the event's start hour
+        String hour = "12"; // Test hour in 24-hour format
 
         String apiUrl = "http://api.weatherapi.com/v1/forecast.json?key=" + apiKey +
                 "&q=" + latitude + "," + longitude +
                 "&dt=" + dt +
                 "&hour=" + hour +
                 "&units=imperial"; // Specify imperial(US) units in the API request
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -229,9 +209,8 @@ public class ViewEventActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tempTextView.setText("Error fetching weather data.");
                             windSpeedTextView.setText("");
-                            rainPercentageTextView.setText("");
+                            rainPercentageTextView.setText("ERROR");
                         }
                     });
                 }
@@ -265,15 +244,15 @@ public class ViewEventActivity extends AppCompatActivity {
     }
 
     private String getAttireMessage(int weatherConditionCode, double avgTempFahrenheit, double totalPrecipInches) {
-        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-        int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+        String eventHour = event.getStartTimeAsMilitaryHourStringForecast();
+        int milHour = Integer.parseInt(eventHour);
         switch (weatherConditionCode) {
             case 1000:
                 //sunny/clear (the only one that diffenent based on time
-                if(hourOfDay >= 0 && hourOfDay < 18){
-                    return "and clear.";
+                if(milHour >= 0 && milHour < 18){
+                    return " clear.";
                 } else {
-                    return "and clear.";
+                    return "a clear night. Enjoy the stars!.";
                 }
             case 1003:
                 if(avgTempFahrenheit<73) {
@@ -383,11 +362,15 @@ public class ViewEventActivity extends AppCompatActivity {
             case 1003:
                 // Weather is partly cloudy
                 return getResources().getDrawable(R.drawable.weather_partly_cloudy_icon);
+            case 1009:
             case 1006:
                 // Weather is cloudy
                 return getResources().getDrawable(R.drawable.weather_cloudy_icon);
+            case 1114:
+            case 1117:
             case 1135:
-                // Weather is foggy
+            case 1147:
+                //Weather is foggy
                 return getResources().getDrawable(R.drawable.weather_fog_icon);
             case 1063:
             case 1066:
@@ -401,6 +384,14 @@ public class ViewEventActivity extends AppCompatActivity {
             case 1195:
                 // Weather is rainy
                 return getResources().getDrawable(R.drawable.weather_rain_icon);
+            case 1210:
+            case 1213:
+            case 1216:
+            case 1219:
+            case 1222:
+            case 1225:
+                // Weather is snowy
+                return getResources().getDrawable(R.drawable.weather_snow_icon);
             // pls add more cases for other weather conditions
             default:
                 // Default weather (SUN) icon if the condition code is not recognized

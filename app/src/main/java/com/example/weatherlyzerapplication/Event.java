@@ -153,17 +153,6 @@ public class Event {
             }
         });
     }
-
-    // Method to get the name of the location
-    /*public String getLocationName() {
-        if (location != null) {
-            return location.getName();
-        } else {
-            return "Location not available";
-        }
-    }
-     */
-
     public String getLocationName() {
         return locationName;
     }
@@ -179,8 +168,12 @@ public class Event {
     }
     //used for future forecast data in view event activity
     public String getStartTimeAsStringForecast() {
-        //fix below to grab the date in this format: yyyy-MM-dd
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new Date(startTimeMillis));
+    }
+    //used for the hour in 24 hr mode required for forecasts data in view event
+    public String getStartTimeAsMilitaryHourStringForecast() {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh", Locale.getDefault());
         return sdf.format(new Date(startTimeMillis));
     }
 }

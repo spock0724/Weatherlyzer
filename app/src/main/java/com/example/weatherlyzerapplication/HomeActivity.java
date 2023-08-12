@@ -43,6 +43,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.TimeZone;
 
 
@@ -67,7 +69,6 @@ public class HomeActivity extends ComponentActivity {
     private ArrayList<Event> eventList = new ArrayList<>();
     private EventListAdapter eventListAdapter;
 
-    //private ArrayAdapter<Event> eventAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,20 +78,6 @@ public class HomeActivity extends ComponentActivity {
         eventListView = findViewById(R.id.eventListView);
         eventListAdapter = new EventListAdapter(this, eventList);
         eventListView.setAdapter(eventListAdapter);
-
-        // TODO Add a click listener to the ListView
-        /*
-        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event selectedEvent = eventList.get(position);
-                String eventId = selectedEvent.getEventId();
-
-                // Show a delete confirmation AlertDialog with eventId as the tag
-                showDeleteConfirmationDialog(eventId);
-            }
-        });
-         */
 
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -118,6 +105,14 @@ public class HomeActivity extends ComponentActivity {
 
         // Fetch events from the database and add them to the eventList
         fetchEventsFromDatabase();
+
+// Create the eventListAdapter after sorting
+        eventListAdapter = new EventListAdapter(this, eventList);
+
+// Set the adapter to the ListView
+        eventListView = findViewById(R.id.eventListView);
+        eventListView.setAdapter(eventListAdapter);
+
 
         setupViews();
         setupButtons();
@@ -274,6 +269,12 @@ public class HomeActivity extends ComponentActivity {
                         eventList.add(event);
                     }
                 }
+                Collections.sort(eventList, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event event1, Event event2) {
+                        return Long.compare(event1.getStartTimeMillis(), event2.getStartTimeMillis());
+                    }
+                });
 
                 // Notify the adapter that the data has changed
                 eventListAdapter.notifyDataSetChanged();
@@ -370,12 +371,19 @@ public class HomeActivity extends ComponentActivity {
         }).start();
     }
 
-    //TODO make more comprehensive
+    //TODO make more
     private Drawable getWeatherIcon(int weatherConditionCode) {
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+        int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
         switch (weatherConditionCode) {
             case 1000:
-                // Weather is clear
-                return getResources().getDrawable(R.drawable.weather_clear_icon);
+                if (hourOfDay >= 0 && hourOfDay < 18) {
+                    // Weather is clear DAY
+                    return getResources().getDrawable(R.drawable.weather_clear_icon);
+                } else {
+                    // Weather is clear Night
+                    return getResources().getDrawable(R.drawable.weather_clearnight_icon);
+                }
             case 1003:
                 // Weather is partly cloudy
                 return getResources().getDrawable(R.drawable.weather_partly_cloudy_icon);
