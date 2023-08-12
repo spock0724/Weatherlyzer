@@ -271,9 +271,9 @@ public class ViewEventActivity extends AppCompatActivity {
             case 1000:
                 //sunny/clear (the only one that diffenent based on time
                 if(hourOfDay >= 0 && hourOfDay < 18){
-                    return "sunny. Dress lightly.";
+                    return "and clear.";
                 } else {
-                    return "a clear night. Enjoy the stars!";
+                    return "and clear.";
                 }
             case 1003:
                 if(avgTempFahrenheit<73) {
