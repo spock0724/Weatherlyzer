@@ -129,20 +129,6 @@ public class ViewEventActivity extends AppCompatActivity {
                 Log.e("ViewEventActivity", "Database error: " + databaseError.getMessage());
             }
         });
-
-    /*
-        // Get the event details from the intent
-        Event event = getIntent().getParcelableExtra("event");
-
-        if (event != null) {
-            eventNameTextView.setText(event.getTitle());
-            locationTextView.setText(event.getLocationName());
-            startTimeTextView.setText(event.getStartTimeAsString());
-
-            // Fetch and display forecast data using the event's location
-            fetchAndDisplayForecast(event.getLatitude(), event.getLongitude());
-        }
-     */
     }
 
     private void fetchAndDisplayForecast(double latitude, double longitude, String eventDate) {

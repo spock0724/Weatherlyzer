@@ -275,6 +275,7 @@ public class HomeActivity extends ComponentActivity {
                     }
                 }
 
+
                 // Notify the adapter that the data has changed
                 eventListAdapter.notifyDataSetChanged();
             }

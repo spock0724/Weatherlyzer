@@ -38,7 +38,7 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="Email"
-        android:inputType="text"
+        android:inputType="textNoSuggestions|textVisiblePassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#CDCDCD"
         app:layout_constraintEnd_toEndOf="parent"
